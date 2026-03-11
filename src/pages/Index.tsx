@@ -4,7 +4,7 @@ import avantApresLyla from "@/assets/avant-apres-lyla.png";
 import avantApresMarceau from "@/assets/avant-apres-marceau.png";
 import avantApresLouka from "@/assets/avant-apres-louka.png";
 import logo from "@/assets/pedagogie_noir.svg";
-import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X } from "lucide-react";
+import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users } from "lucide-react";
 import { useState } from "react";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
@@ -53,22 +53,22 @@ const testimonials = [
 ];
 
 const keys = [
-  { title: "Les constats", desc: "Découvrez les défis courants de l'écriture chez les enfants et apprenez à les identifier." },
-  { title: "Quand et par quoi commencer", desc: "Apprenez à déterminer le moment idéal pour intervenir et les premières étapes à suivre." },
-  { title: "La latéralisation", desc: "Découvrez l'importance de la latéralisation pour l'écriture et comment identifier et soutenir la dominance manuelle." },
-  { title: "Les réflexes archaïques", desc: "Comprenez le lien entre réflexe archaïque et écriture." },
-  { title: "Bonus : réflexe d'agrippement", desc: "Découvrez le réflexe archaïque de l'agrippement et comment sa non-intégration peut affecter l'écriture." },
-  { title: "La posture", desc: "Maîtrisez les meilleures pratiques pour une posture d'écriture optimale." },
-  { title: "Les prérequis pour une écriture indolore", desc: "Établissez les bases pré-requis pour une écriture indolore." },
-  { title: "La tenue de crayon", desc: "Explorez les techniques pour une prise en main correcte et confortable du crayon." },
-  { title: "L'inclinaison du support", desc: "Apprenez comment l'inclinaison du papier ou du cahier peut faciliter l'écriture." },
-  { title: "Le déplacement de l'avant-bras", desc: "Découvrez comment le mouvement de l'avant-bras contribue à une écriture fluide." },
-  { title: "Le tracé des lettres", desc: "Perfectionnez le tracé des lettres pour une écriture fluide et lisible." },
-  { title: "Les formes de base", desc: "Identifiez le processus de formation des lettres." },
-  { title: "Quelques règles d'écriture", desc: "Intégrez les règles simples pour améliorer la lisibilité et la fluidité." },
-  { title: "Partir du geste", desc: "Utilisez le mouvement naturel du corps pour enseigner un geste fluide." },
-  { title: "Les supports", desc: "Choisissez les supports optimaux pour faciliter l'apprentissage et l'écriture aux enfants des cycles 1 à 4." },
-  { title: "Les outils scripteurs", desc: "Sélectionnez les outils d'écriture les plus adaptés pour vos enfants." },
+  { title: "Les constats", desc: "Comprends les défis courants de l'écriture chez les enfants et apprends à les repérer au quotidien." },
+  { title: "Quand et par quoi commencer", desc: "Sais quand intervenir et par quoi commencer pour aider ton enfant efficacement." },
+  { title: "La latéralisation", desc: "Comprends l'importance de la latéralisation et comment identifier la main dominante de ton enfant." },
+  { title: "Les réflexes archaïques", desc: "Découvre le lien entre les réflexes archaïques et les difficultés d'écriture de ton enfant." },
+  { title: "Bonus : réflexe d'agrippement", desc: "Comprends comment le réflexe d'agrippement peut affecter la tenue du crayon et l'écriture." },
+  { title: "La posture", desc: "Apprends les bonnes pratiques pour installer une posture d'écriture confortable à la maison." },
+  { title: "Les prérequis pour une écriture indolore", desc: "Mets en place les bases pour que ton enfant écrive sans douleur ni fatigue." },
+  { title: "La tenue de crayon", desc: "Aide ton enfant à bien tenir son crayon avec les bonnes techniques." },
+  { title: "L'inclinaison du support", desc: "Apprends comment incliner le cahier pour faciliter l'écriture de ton enfant." },
+  { title: "Le déplacement de l'avant-bras", desc: "Comprends comment le mouvement de l'avant-bras rend l'écriture plus fluide." },
+  { title: "Le tracé des lettres", desc: "Accompagne ton enfant pour un tracé des lettres fluide et lisible." },
+  { title: "Les formes de base", desc: "Comprends comment les lettres se forment à partir de gestes simples." },
+  { title: "Quelques règles d'écriture", desc: "Intègre des règles simples pour améliorer la lisibilité de l'écriture de ton enfant." },
+  { title: "Partir du geste", desc: "Utilise le mouvement naturel du corps pour aider ton enfant à écrire avec fluidité." },
+  { title: "Les supports", desc: "Choisis les cahiers et supports les plus adaptés selon l'âge de ton enfant." },
+  { title: "Les outils scripteurs", desc: "Trouve les crayons et stylos les mieux adaptés pour ton enfant." },
 ];
 
 const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: string }) => {
@@ -86,7 +86,7 @@ const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: strin
         <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </div>
       {open && (
-        <p className="mt-3 pl-13 text-sm text-muted-foreground leading-relaxed ml-13 pl-[52px]">
+        <p className="mt-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">
           {desc}
         </p>
       )}
@@ -138,7 +138,7 @@ const Index = () => {
       {/* Navbar */}
       <nav className="bg-hero text-hero-foreground sticky top-0 z-50">
         <div className="mx-auto max-w-5xl px-4 py-3.5 flex items-center justify-between">
-          <img src={logo} alt="Trari Pédagogie" className="h-7 brightness-0 invert" />
+          <img src={logo} alt="Trari Pédagogie" className="h-[34px] brightness-0 invert" />
           <div className="flex items-center gap-4">
             <p className="text-xs text-hero-foreground/70 hidden sm:block">
               +5 500 enfants accompagnés &nbsp;•&nbsp; +1 500 professionnels formés
@@ -187,12 +187,15 @@ const Index = () => {
               />
             </div>
             <div className="text-center md:text-left">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Votre formatrice</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Ta formatrice</p>
               <h2 className="text-3xl md:text-4xl leading-snug mb-6">
                 Une méthode issue de plus de 15 ans d'accompagnement d'enfants
               </h2>
               <p className="text-base leading-relaxed text-muted-foreground">
-                Depuis plus de 15 ans, Samirra accompagne des enfants dans leur développement et leur épanouissement. En graphopédagogie, elle a développé une méthode structurée et éprouvée.
+                Depuis plus de 15 ans, j'accompagne des enfants dans leur développement et leur confiance. En graphopédagogie, j'ai développé une méthode structurée et éprouvée pour aider les enfants à retrouver une écriture fluide, lisible et sans douleur.
+              </p>
+              <p className="mt-4 text-sm font-medium text-foreground">
+                — Samirra Trari, graphopédagogue
               </p>
             </div>
           </div>
@@ -217,13 +220,13 @@ const Index = () => {
         <div className="mx-auto max-w-3xl px-4 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Le constat</p>
           <h2 className="text-3xl md:text-4xl mb-4">
-            Pourquoi tant d'enfants rencontrent des difficultés d'écriture ?
+            Pourquoi ton enfant rencontre des difficultés d'écriture ?
           </h2>
           <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
             Très souvent, les difficultés d'écriture ne viennent pas d'un manque d'effort ou de motivation.
           </p>
           <p className="text-foreground font-medium mb-10">
-            Elles viennent d'un geste graphique mal installé.
+            Elles viennent d'un geste graphique qui ne s'est pas installé correctement.
           </p>
           <p className="text-sm text-muted-foreground mb-6">Les difficultés peuvent être liées à :</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
@@ -243,8 +246,33 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 3 — VSL */}
+      {/* SECTION — Pour qui */}
       <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Pour qui ?</p>
+          <h2 className="text-3xl md:text-4xl mb-10">
+            Cette formation est faite pour toi si…
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              { icon: <Heart className="h-6 w-6" />, text: "Ton enfant a du mal à écrire lisiblement ou se plaint de douleurs en écrivant" },
+              { icon: <BookOpen className="h-6 w-6" />, text: "Tu veux l'aider à la maison avec des exercices simples et efficaces" },
+              { icon: <Brain className="h-6 w-6" />, text: "Tu cherches à comprendre d'où viennent ses difficultés d'écriture" },
+              { icon: <Users className="h-6 w-6" />, text: "Tu veux être guidée pas à pas par une méthode éprouvée sur des milliers d'enfants" },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4 rounded-xl border border-border bg-card p-5 text-left">
+                <div className="shrink-0 rounded-full bg-accent/10 p-2.5 text-accent">
+                  {item.icon}
+                </div>
+                <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION — VSL */}
+      <section className="py-16 md:py-24 bg-card">
         <div className="mx-auto max-w-3xl px-4">
           <h2 className="text-3xl md:text-4xl text-center mb-3">
             Découvre la méthode en vidéo
@@ -257,14 +285,14 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-10 bg-card">
+      <section className="py-10">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <CtaButton />
         </div>
       </section>
 
-      {/* SECTION 4 — Avant / Après */}
-      <section className="py-16 md:py-24">
+      {/* SECTION — Avant / Après */}
+      <section className="py-16 md:py-24 bg-card">
         <div className="mx-auto max-w-4xl px-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Résultats</p>
           <h2 className="text-3xl md:text-4xl text-center mb-3">
@@ -280,7 +308,7 @@ const Index = () => {
               { src: avantApresMarceau, alt: "Avant/Après — Marceau — CM1", label: "Marceau — CM1" },
               { src: avantApresLouka, alt: "Avant/Après — Louka — CE2", label: "Louka — CE2" },
             ].map((img, i) => (
-              <div key={i} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+              <div key={i} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
                 <img src={img.src} alt={img.alt} className="w-full h-auto" loading="lazy" />
                 <p className="text-center text-sm font-medium text-muted-foreground py-3">{img.label}</p>
               </div>
@@ -289,8 +317,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 5 — Témoignages */}
-      <section className="py-16 md:py-24 bg-card">
+      {/* SECTION — Témoignages */}
+      <section className="py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Témoignages</p>
           <h2 className="text-3xl md:text-4xl text-center mb-3">
@@ -302,7 +330,7 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {testimonials.map((t, i) => (
-              <div key={i} className="rounded-xl border border-border bg-background p-6 flex flex-col hover:shadow-md transition-shadow duration-300">
+              <div key={i} className="rounded-xl border border-border bg-card p-6 flex flex-col hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
                     {t.name[0]}
@@ -323,8 +351,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 6 — Contenu de la formation */}
-      <section className="py-16 md:py-24">
+      {/* SECTION — Contenu de la formation */}
+      <section className="py-16 md:py-24 bg-card">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Le programme</p>
           <h2 className="text-3xl md:text-4xl text-center mb-12">
@@ -339,7 +367,7 @@ const Index = () => {
               { icon: <Award className="h-5 w-5" />, value: "Certificat", label: "Attestation de fin de formation" },
               { icon: <MessageCircle className="h-5 w-5" />, value: "Groupe WhatsApp", label: "Communauté d'entraide" },
             ].map((item, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-5 text-center">
+              <div key={i} className="rounded-xl border border-border bg-background p-5 text-center">
                 <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
                   {item.icon}
                 </div>
@@ -351,8 +379,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 7 — Les 15 clés */}
-      <section className="py-16 md:py-24 bg-card">
+      {/* SECTION — Les 16 clés */}
+      <section className="py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Programme détaillé</p>
           <h2 className="text-3xl md:text-4xl text-center mb-3">
@@ -370,13 +398,13 @@ const Index = () => {
       </section>
 
       {/* CTA mid */}
-      <section className="py-10">
+      <section className="py-10 bg-card">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <CtaButton />
         </div>
       </section>
 
-      {/* SECTION 8 — Bonus */}
+      {/* SECTION — Bonus */}
       <section className="py-16 md:py-24 bg-hero text-hero-foreground">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">En plus</p>
@@ -388,7 +416,7 @@ const Index = () => {
               { icon: <Gift className="h-5 w-5" />, title: "Module réflexe d'agrippement" },
               { icon: <Gift className="h-5 w-5" />, title: "Module spécifique pour les enfants gauchers" },
               { icon: <Award className="h-5 w-5" />, title: "Compléments d'expertes" },
-              { icon: <MessageCircle className="h-5 w-5" />, title: "Accès au groupe WhatsApp privé de la communauté" },
+              { icon: <MessageCircle className="h-5 w-5" />, title: "Accès au groupe WhatsApp privé" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-3 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-5 text-left">
                 <div className="shrink-0 text-accent">{b.icon}</div>
@@ -399,7 +427,7 @@ const Index = () => {
           <div className="mt-10 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
             <h3 className="text-lg font-semibold mb-2">Compléments d'expertes</h3>
             <p className="text-sm text-hero-foreground/70 leading-relaxed mb-4">
-              Des interventions de professionnelles reconnues pour enrichir ta pratique :
+              Des interventions de professionnelles reconnues pour t'accompagner encore plus loin :
             </p>
             <div className="flex flex-col gap-3">
               {[
@@ -422,7 +450,7 @@ const Index = () => {
           <div className="mt-4 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
             <h3 className="text-lg font-semibold mb-2">Groupe WhatsApp privé</h3>
             <p className="text-sm text-hero-foreground/70 leading-relaxed">
-              Rejoins une communauté bienveillante de parents et professionnels formés à la méthode. Échange tes cas pratiques, pose tes questions et bénéficie du soutien du groupe au quotidien.
+              Rejoins une communauté bienveillante de parents formés à la méthode. Échange tes questions, partage tes progrès et bénéficie du soutien du groupe au quotidien.
             </p>
           </div>
         </div>
@@ -448,7 +476,7 @@ const Index = () => {
             ))}
           </div>
           <p className="text-base font-medium text-foreground">
-            C'est une formation <strong>pratique, structurée et directement applicable</strong>.
+            C'est une formation <strong>pratique, structurée et directement applicable à la maison</strong>.
           </p>
         </div>
       </section>
@@ -471,7 +499,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 9 — Prix */}
+      {/* SECTION — Prix */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-lg px-4 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Prête à te lancer ?</p>
