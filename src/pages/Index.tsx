@@ -157,8 +157,8 @@ const Index = () => {
             <CheckCircle className="h-10 w-10 text-success" />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] leading-tight mb-6">
-            Bonne nouvelle : cette formation{" "}
-            <span className="italic text-accent">correspond à ton profil.</span>
+            Bonne nouvelle : il est possible{" "}
+            <span className="italic text-accent">d'aider ton enfant.</span>
           </h1>
           <p className="text-lg md:text-xl text-hero-foreground/75 leading-relaxed mb-10 max-w-xl mx-auto">
             Les réponses que tu as données montrent que la méthode peut vraiment aider ton enfant.
