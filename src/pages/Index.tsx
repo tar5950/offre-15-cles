@@ -214,21 +214,7 @@ const Index = () => {
           <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
             Samirra t'explique comment fonctionne la méthode et pourquoi elle donne des résultats concrets.
           </p>
-          <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl bg-foreground/5" style={{ paddingBottom: "56.25%" }}>
-            <iframe
-              className="absolute inset-0 w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=0&showinfo=0&iv_load_policy=3&disablekb=1&fs=0"
-              title="Présentation de la méthode"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
-            />
-            {/* Top overlay — covers YouTube logo, channel pic, title */}
-            <div className="absolute top-0 left-0 right-0 h-16 z-10 pointer-events-auto" />
-            {/* Bottom overlay — covers controls bar with YT logo */}
-            <div className="absolute bottom-0 left-0 right-0 h-14 z-10 pointer-events-auto bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-2">
-              <span className="text-[11px] text-white/60 font-medium">▶ Clique pour lancer la vidéo</span>
-            </div>
-          </div>
+          <VideoPlayer />
         </div>
       </section>
 
