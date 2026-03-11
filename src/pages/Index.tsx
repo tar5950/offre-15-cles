@@ -4,11 +4,12 @@ import avantApresLyla from "@/assets/avant-apres-lyla.png";
 import avantApresMarceau from "@/assets/avant-apres-marceau.png";
 import avantApresLouka from "@/assets/avant-apres-louka.png";
 import logo from "@/assets/pedagogie_noir.svg";
-import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play } from "lucide-react";
+import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X } from "lucide-react";
+import { useState } from "react";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
 
-const CtaButton = ({ className = "", variant = "default" }: { className?: string; variant?: "default" | "hero" }) => (
+const CtaButton = ({ className = "" }: { className?: string }) => (
   <a
     href={CTA_URL}
     target="_blank"
@@ -51,6 +52,48 @@ const testimonials = [
   },
 ];
 
+const keys = [
+  { title: "Les constats", desc: "Découvrez les défis courants de l'écriture chez les enfants et apprenez à les identifier." },
+  { title: "Quand et par quoi commencer", desc: "Apprenez à déterminer le moment idéal pour intervenir et les premières étapes à suivre." },
+  { title: "La latéralisation", desc: "Découvrez l'importance de la latéralisation pour l'écriture et comment identifier et soutenir la dominance manuelle." },
+  { title: "Les réflexes archaïques", desc: "Comprenez le lien entre réflexe archaïque et écriture." },
+  { title: "Bonus : réflexe d'agrippement", desc: "Découvrez le réflexe archaïque de l'agrippement et comment sa non-intégration peut affecter l'écriture." },
+  { title: "La posture", desc: "Maîtrisez les meilleures pratiques pour une posture d'écriture optimale." },
+  { title: "Les prérequis pour une écriture indolore", desc: "Établissez les bases pré-requis pour une écriture indolore." },
+  { title: "La tenue de crayon", desc: "Explorez les techniques pour une prise en main correcte et confortable du crayon." },
+  { title: "L'inclinaison du support", desc: "Apprenez comment l'inclinaison du papier ou du cahier peut faciliter l'écriture." },
+  { title: "Le déplacement de l'avant-bras", desc: "Découvrez comment le mouvement de l'avant-bras contribue à une écriture fluide." },
+  { title: "Le tracé des lettres", desc: "Perfectionnez le tracé des lettres pour une écriture fluide et lisible." },
+  { title: "Les formes de base", desc: "Identifiez le processus de formation des lettres." },
+  { title: "Quelques règles d'écriture", desc: "Intégrez les règles simples pour améliorer la lisibilité et la fluidité." },
+  { title: "Partir du geste", desc: "Utilisez le mouvement naturel du corps pour enseigner un geste fluide." },
+  { title: "Les supports", desc: "Choisissez les supports optimaux pour faciliter l'apprentissage et l'écriture aux enfants des cycles 1 à 4." },
+  { title: "Les outils scripteurs", desc: "Sélectionnez les outils d'écriture les plus adaptés pour vos enfants." },
+];
+
+const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: string }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <button
+      onClick={() => setOpen(!open)}
+      className="w-full text-left rounded-xl border border-border bg-background p-4 md:p-5 transition-all hover:shadow-md"
+    >
+      <div className="flex items-center gap-4">
+        <span className="shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
+          {num}
+        </span>
+        <span className="font-medium text-foreground flex-1">{title}</span>
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </div>
+      {open && (
+        <p className="mt-3 pl-13 text-sm text-muted-foreground leading-relaxed ml-13 pl-[52px]">
+          {desc}
+        </p>
+      )}
+    </button>
+  );
+};
+
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
@@ -74,7 +117,7 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* SECTION 1 — Hero / Bonne nouvelle */}
+      {/* SECTION 1 — Hero */}
       <section className="bg-hero text-hero-foreground py-20 md:py-32 relative">
         <div className="mx-auto max-w-2xl px-4 text-center">
           <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full border-2 border-success/40 bg-success/10">
@@ -110,22 +153,60 @@ const Index = () => {
               <h2 className="text-3xl md:text-4xl leading-snug mb-6">
                 Une méthode issue de plus de 15 ans d'accompagnement d'enfants
               </h2>
-              <p className="text-base leading-relaxed text-muted-foreground mb-4">
-                En graphopédagogie, j'ai déjà accompagné plus de <strong className="text-foreground">5 500 enfants</strong> et formé plus de <strong className="text-foreground">1 500 professionnels</strong>.
-              </p>
               <p className="text-base leading-relaxed text-muted-foreground">
-                Mon objectif est simple : aider les enfants à retrouver une écriture fluide, lisible et sans douleur.
-              </p>
-              <p className="mt-5 text-sm font-medium text-foreground">
-                — Samirra Trari, graphopédagogue
+                Depuis plus de 15 ans, Samirra accompagne des enfants dans leur développement et leur épanouissement. En graphopédagogie, elle a développé une méthode structurée et éprouvée.
               </p>
             </div>
+          </div>
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-6 mt-12 max-w-xl mx-auto md:mx-0 md:ml-auto md:max-w-lg">
+            {[
+              { value: "15+", label: "ans d'expérience" },
+              { value: "5 500+", label: "enfants accompagnés" },
+              { value: "1 500+", label: "professionnels formés" },
+            ].map((s, i) => (
+              <div key={i} className="text-center">
+                <p className="text-3xl md:text-4xl font-bold text-primary">{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION — Le constat */}
+      <section className="py-16 md:py-24 bg-card">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Le constat</p>
+          <h2 className="text-3xl md:text-4xl mb-4">
+            Pourquoi tant d'enfants rencontrent des difficultés d'écriture ?
+          </h2>
+          <p className="text-muted-foreground mb-4 max-w-xl mx-auto">
+            Très souvent, les difficultés d'écriture ne viennent pas d'un manque d'effort ou de motivation.
+          </p>
+          <p className="text-foreground font-medium mb-10">
+            Elles viennent d'un geste graphique mal installé.
+          </p>
+          <p className="text-sm text-muted-foreground mb-6">Les difficultés peuvent être liées à :</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {[
+              { icon: "🪑", label: "Posture" },
+              { icon: "🤲", label: "Coordination bras-poignet-main" },
+              { icon: "✏️", label: "Tenue du crayon" },
+              { icon: "💪", label: "Pression du stylo" },
+              { icon: "✍️", label: "Organisation du geste graphique" },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center gap-2 rounded-xl bg-background p-4 border border-border">
+                <span className="text-2xl">{item.icon}</span>
+                <span className="text-xs font-medium text-foreground text-center">{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* SECTION 3 — VSL */}
-      <section className="py-16 md:py-24 bg-card">
+      <section className="py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-4">
           <h2 className="text-3xl md:text-4xl text-center mb-3">
             Découvre la méthode en vidéo
@@ -146,40 +227,43 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 4 — Avant / Après */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-4xl px-4">
-          <h2 className="text-3xl md:text-4xl text-center mb-3">
-            Des résultats concrets
-          </h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-md mx-auto">
-            Voici l'évolution de l'écriture de quelques enfants accompagnés par la méthode.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { src: avantApresEric, alt: "Avant/Après écriture d'Éric, 15 ans" },
-              { src: avantApresLyla, alt: "Avant/Après écriture de Lyla, CE2" },
-              { src: avantApresMarceau, alt: "Avant/Après écriture de Marceau, CM1" },
-              { src: avantApresLouka, alt: "Avant/Après écriture de Louka, CE2" },
-            ].map((img, i) => (
-              <div key={i} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src={img.src} alt={img.alt} className="w-full h-auto" loading="lazy" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA mid-page */}
+      {/* CTA */}
       <section className="py-10 bg-card">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <CtaButton />
         </div>
       </section>
 
-      {/* SECTION 5 — Témoignages (Google-style) */}
+      {/* SECTION 4 — Avant / Après */}
       <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-4xl px-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Résultats</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-3">
+            Des résultats visibles sur l'écriture
+          </h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-md mx-auto">
+            Voici l'évolution de l'écriture de quelques enfants accompagnés par la méthode.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              { src: avantApresEric, alt: "Avant/Après — Éric — 15 ans", label: "Éric — 15 ans, 1ère" },
+              { src: avantApresLyla, alt: "Avant/Après — Lyla — CE2", label: "Lyla — CE2" },
+              { src: avantApresMarceau, alt: "Avant/Après — Marceau — CM1", label: "Marceau — CM1" },
+              { src: avantApresLouka, alt: "Avant/Après — Louka — CE2", label: "Louka — CE2" },
+            ].map((img, i) => (
+              <div key={i} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src={img.src} alt={img.alt} className="w-full h-auto" loading="lazy" />
+                <p className="text-center text-sm font-medium text-muted-foreground py-3">{img.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5 — Témoignages */}
+      <section className="py-16 md:py-24 bg-card">
         <div className="mx-auto max-w-5xl px-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Témoignages</p>
           <h2 className="text-3xl md:text-4xl text-center mb-3">
             Ce qu'en disent les parents
           </h2>
@@ -215,87 +299,146 @@ const Index = () => {
         </div>
       </section>
 
-      {/* SECTION 6 — Présentation de la méthode */}
-      <section className="py-16 md:py-24 bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-3xl md:text-4xl mb-4 leading-snug">
-            La méthode{" "}
-            <span className="text-accent italic">"15 clés pour transformer l'écriture des enfants en 10 min/jour"</span>
+      {/* SECTION 6 — Contenu de la formation */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Le programme</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-12">
+            Une formation claire et directement applicable
           </h2>
-          <p className="text-hero-foreground/70 mb-12 max-w-xl mx-auto">
-            Une méthode structurée basée sur l'expérience de terrain et les principes de la graphopédagogie.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             {[
-              { icon: "🧍", label: "La posture" },
-              { icon: "✏️", label: "La tenue du crayon" },
-              { icon: "💨", label: "La fluidité du geste" },
-              { icon: "🧠", label: "Les réflexes archaïques" },
-              { icon: "🤲", label: "La coordination du mouvement" },
+              { icon: <Video className="h-5 w-5" />, value: "63 vidéos", label: "Cours structurés étape par étape" },
+              { icon: <Play className="h-5 w-5" />, value: "5 à 10 min", label: "Format court et efficace" },
+              { icon: <Award className="h-5 w-5" />, value: "5h de formation", label: "Contenu dense et applicable" },
+              { icon: <FileText className="h-5 w-5" />, value: "Livret", label: "Support écrit complet" },
+              { icon: <Award className="h-5 w-5" />, value: "Certificat", label: "Attestation de fin de formation" },
+              { icon: <MessageCircle className="h-5 w-5" />, value: "Groupe WhatsApp", label: "Communauté d'entraide" },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-4 text-left">
-                <span className="text-2xl">{item.icon}</span>
-                <span className="text-sm font-medium text-hero-foreground">{item.label}</span>
+              <div key={i} className="rounded-xl border border-border bg-card p-5 text-center">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">
+                  {item.icon}
+                </div>
+                <p className="font-semibold text-foreground text-sm">{item.value}</p>
+                <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* SECTION 7 — Contenu de la formation */}
-      <section className="py-16 md:py-24">
+      {/* SECTION 7 — Les 15 clés */}
+      <section className="py-16 md:py-24 bg-card">
         <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-3xl md:text-4xl text-center mb-12">
-            Ce que contient la formation
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Programme détaillé</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-3">
+            Les clés de la méthode
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { icon: <Video className="h-5 w-5" />, text: "63 vidéos courtes" },
-              { icon: <Play className="h-5 w-5" />, text: "Capsules de 5 à 10 minutes" },
-              { icon: <FileText className="h-5 w-5" />, text: "Un livret de formation" },
-              { icon: <Award className="h-5 w-5" />, text: "Une attestation de formation" },
-              { icon: <MessageCircle className="h-5 w-5" />, text: "Un groupe WhatsApp d'entraide" },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-4 rounded-xl border border-border bg-background p-5">
-                <div className="shrink-0 rounded-full bg-accent/10 p-3 text-accent">
-                  {item.icon}
-                </div>
-                <span className="font-medium text-foreground">{item.text}</span>
-              </div>
+          <p className="text-center text-muted-foreground mb-10">
+            Clique sur une clé pour découvrir son contenu
+          </p>
+          <div className="flex flex-col gap-3">
+            {keys.map((k, i) => (
+              <KeyItem key={i} num={i + 1} title={k.title} desc={k.desc} />
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA mid */}
+      <section className="py-10">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <CtaButton />
         </div>
       </section>
 
       {/* SECTION 8 — Bonus */}
-      <section className="py-14 bg-accent/5">
+      <section className="py-16 md:py-24 bg-hero text-hero-foreground">
         <div className="mx-auto max-w-3xl px-4 text-center">
-          <div className="inline-flex items-center gap-2 mb-8">
-            <Gift className="h-5 w-5 text-accent" />
-            <span className="font-semibold text-accent text-sm uppercase tracking-widest">Bonus inclus</span>
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">En plus</p>
+          <h2 className="text-3xl md:text-4xl mb-10">
+            Bonus inclus dans la formation
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              { icon: <Gift className="h-5 w-5" />, title: "Module réflexe d'agrippement" },
+              { icon: <Gift className="h-5 w-5" />, title: "Module spécifique pour les enfants gauchers" },
+              { icon: <Award className="h-5 w-5" />, title: "Compléments d'expertes" },
+              { icon: <MessageCircle className="h-5 w-5" />, title: "Accès au groupe WhatsApp privé de la communauté" },
+            ].map((b, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-5 text-left">
+                <div className="shrink-0 text-accent">{b.icon}</div>
+                <span className="text-sm font-medium text-hero-foreground">{b.title}</span>
+              </div>
+            ))}
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <div className="rounded-xl border border-accent/20 bg-background p-6 flex-1 max-w-xs mx-auto sm:mx-0">
-              <p className="font-medium text-foreground">Module sur le réflexe d'agrippement</p>
-            </div>
-            <div className="rounded-xl border border-accent/20 bg-background p-6 flex-1 max-w-xs mx-auto sm:mx-0">
-              <p className="font-medium text-foreground">Module spécifique pour les enfants gauchers</p>
-            </div>
+          <div className="mt-10 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
+            <h3 className="text-lg font-semibold mb-2">Groupe WhatsApp privé</h3>
+            <p className="text-sm text-hero-foreground/70 leading-relaxed">
+              Rejoins une communauté bienveillante de parents et professionnels formés à la méthode. Échange tes cas pratiques, pose tes questions et bénéficie du soutien du groupe au quotidien.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* SECTION 9 & 10 — Prix & Accès */}
+      {/* SECTION — Ce que cette formation n'est pas */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Clarification</p>
+          <h2 className="text-3xl md:text-4xl mb-10">
+            Ce que cette formation n'est pas
+          </h2>
+          <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
+            {[
+              "Une approche théorique difficile à appliquer",
+              "Une méthode qui demande des heures d'exercices",
+              "Une formation réservée uniquement aux spécialistes",
+            ].map((item, i) => (
+              <div key={i} className="flex items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-left">
+                <X className="h-5 w-5 text-destructive shrink-0" />
+                <span className="text-sm text-foreground">{item}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-base font-medium text-foreground">
+            C'est une formation <strong>pratique, structurée et directement applicable</strong>.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION — Garantie */}
+      <section className="py-16 md:py-20 bg-card">
+        <div className="mx-auto max-w-xl px-4 text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
+            <ShieldCheck className="h-8 w-8 text-success" />
+          </div>
+          <h2 className="text-3xl md:text-4xl mb-4">
+            Garantie 14 jours
+          </h2>
+          <p className="text-muted-foreground leading-relaxed mb-3">
+            Tu pourras découvrir les Clés 1 et 2 dès ton inscription.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Si la formation ne te convient pas, je m'engage à te rembourser l'intégralité de ton paiement dans un délai de 14 jours suivant ton inscription.
+          </p>
+        </div>
+      </section>
+
+      {/* SECTION 9 — Prix */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-lg px-4 text-center">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Prête à te lancer ?</p>
           <h2 className="text-3xl md:text-4xl mb-10">
-            Rejoins la formation aujourd'hui
+            Accède à la formation complète
           </h2>
           <div className="rounded-2xl border-2 border-accent/30 bg-background p-8 md:p-12 shadow-xl">
             <p className="text-muted-foreground line-through text-lg mb-1">592 €</p>
             <p className="text-5xl md:text-6xl font-bold text-accent mb-1">296 €</p>
-            <p className="text-sm text-muted-foreground mb-8">
+            <p className="text-sm text-muted-foreground mb-2">
               Paiement en une fois ou en deux fois
+            </p>
+            <p className="text-xs text-muted-foreground mb-8">
+              63 vidéos • 5h de formation • Livret inclus • Certificat • Garantie 14 jours
             </p>
             <CtaButton className="w-full justify-center" />
             <div className="mt-8 space-y-2">
