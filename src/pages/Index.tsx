@@ -223,7 +223,6 @@ const Index = () => {
               allowFullScreen
             />
           </div>
-          </div>
         </div>
       </section>
 
