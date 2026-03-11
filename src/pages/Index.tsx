@@ -115,8 +115,10 @@ const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           />
-          {/* Voile invisible sur toute la vidéo pour bloquer clics YouTube */}
-          <div className="absolute inset-0 z-10" />
+          {/* Voile haut pour bloquer logo YouTube */}
+          <div className="absolute top-0 left-0 right-0 h-16 z-10" />
+          {/* Voile bas-droit pour bloquer logo YouTube watermark */}
+          <div className="absolute bottom-0 right-0 w-24 h-14 z-10" />
         </>
       ) : (
         <button
