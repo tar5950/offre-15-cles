@@ -118,7 +118,7 @@ const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string 
           {/* Voile haut pour bloquer logo YouTube */}
           <div className="absolute top-0 left-0 right-0 h-16 z-10" />
           {/* Voile bas-droit pour bloquer logo YouTube watermark */}
-          <div className="absolute bottom-0 right-0 w-24 h-14 z-10" />
+          <div className="absolute bottom-0 right-0 w-40 h-20 z-10" />
         </>
       ) : (
         <button
