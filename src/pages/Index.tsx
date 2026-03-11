@@ -324,6 +324,20 @@ const Index = () => {
         </div>
       </section>
 
+      {/* SECTION — Preuve vidéo */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Preuve en vidéo</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-3">
+            Regarde les résultats par toi-même
+          </h2>
+          <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
+            Une vidéo qui montre concrètement l'impact de la méthode sur l'écriture des enfants.
+          </p>
+          <LockedVideoPlayer videoId="pPn2V-jQUNg" title="Preuve vidéo — Résultats de la méthode" />
+        </div>
+      </section>
+
       {/* SECTION — Témoignages */}
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-4">
