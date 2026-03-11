@@ -528,6 +528,9 @@ const Index = () => {
             Accède à la formation complète
           </h2>
           <div className="rounded-2xl border-2 border-accent/30 bg-background p-8 md:p-12 shadow-xl">
+            <div className="mb-4 flex justify-center">
+              <ScarcityBadge />
+            </div>
             <p className="text-muted-foreground line-through text-lg mb-1">592 €</p>
             <p className="text-5xl md:text-6xl font-bold text-accent mb-1">296 €</p>
             <p className="text-sm text-muted-foreground mb-2">
