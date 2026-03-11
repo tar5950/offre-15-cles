@@ -101,7 +101,7 @@ const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: strin
   );
 };
 
-const VideoPlayer = () => {
+const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string }) => {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -110,14 +110,12 @@ const VideoPlayer = () => {
         <>
           <iframe
             className="absolute inset-0 w-full h-full"
-            src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1&autoplay=1&showinfo=0&iv_load_policy=3"
-            title="Présentation de la méthode"
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&autoplay=1&showinfo=0&iv_load_policy=3`}
+            title={title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           />
-          {/* Top overlay — hides YT logo, title, channel */}
           <div className="absolute top-0 left-0 right-0 h-14 z-10 bg-gradient-to-b from-black/80 to-transparent pointer-events-auto" />
-          {/* Bottom-right overlay — hides YT watermark */}
           <div className="absolute bottom-0 right-0 w-20 h-12 z-10 pointer-events-auto" />
         </>
       ) : (
@@ -126,8 +124,8 @@ const VideoPlayer = () => {
           className="absolute inset-0 w-full h-full z-10 flex items-center justify-center bg-black group cursor-pointer"
         >
           <img
-            src={`https://img.youtube.com/vi/v_fGvVDtA7o/maxresdefault.jpg`}
-            alt="Miniature vidéo"
+            src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+            alt={title}
             className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-90 transition-opacity"
           />
           <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-accent/90 shadow-2xl group-hover:scale-110 transition-transform">
