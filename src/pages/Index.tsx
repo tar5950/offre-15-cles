@@ -143,20 +143,10 @@ const Index = () => {
       {/* Navbar */}
       <nav className="bg-hero text-hero-foreground sticky top-0 z-50">
         <div className="mx-auto max-w-5xl px-4 py-3.5 flex items-center justify-between">
-          <img src={logo} alt="Trari Pédagogie" className="h-[34px] brightness-0 invert" />
-          <div className="flex items-center gap-4">
-            <p className="text-xs text-hero-foreground/70 hidden sm:block">
-              +5 500 enfants accompagnés &nbsp;•&nbsp; +1 500 professionnels formés
-            </p>
-            <a
-              href={CTA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition-all hover:brightness-110"
-            >
-              S'inscrire
-            </a>
-          </div>
+          <img src={logo} alt="Trari Pédagogie" className="h-[41px] brightness-0 invert" />
+          <p className="text-xs text-hero-foreground/70 hidden sm:block">
+            +5 500 enfants accompagnés &nbsp;•&nbsp; +1 500 professionnels formés
+          </p>
         </div>
       </nav>
 
