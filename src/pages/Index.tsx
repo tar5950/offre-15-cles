@@ -217,11 +217,14 @@ const Index = () => {
           <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl bg-foreground/5" style={{ paddingBottom: "56.25%" }}>
             <iframe
               className="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1&showinfo=0"
+              src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1"
               title="Présentation de la méthode"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+              sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
             />
+            {/* Overlay to block YouTube logo click redirect */}
+            <div className="absolute top-0 right-0 w-24 h-16 z-10" />
           </div>
         </div>
       </section>
