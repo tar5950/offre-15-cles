@@ -216,12 +216,13 @@ const Index = () => {
           </p>
           <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl bg-foreground/5" style={{ paddingBottom: "56.25%" }}>
             <iframe
-              className="absolute inset-0 w-full h-full"
-              src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1"
+              className="absolute inset-0 w-full h-full pointer-events-auto"
+              src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1&disablekb=1&fs=1&playsinline=1&origin=https://id-preview--a310520e-671c-408b-80b1-5656444d1a99.lovable.app"
               title="Présentation de la méthode"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               referrerPolicy="no-referrer"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
             />
           </div>
         </div>
