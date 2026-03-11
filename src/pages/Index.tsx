@@ -4,7 +4,7 @@ import avantApresLyla from "@/assets/avant-apres-lyla.png";
 import avantApresMarceau from "@/assets/avant-apres-marceau.png";
 import avantApresLouka from "@/assets/avant-apres-louka.png";
 import logo from "@/assets/pedagogie_noir.svg";
-import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users } from "lucide-react";
+import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users, Clock } from "lucide-react";
 import { useState } from "react";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
@@ -16,9 +16,16 @@ const CtaButton = ({ className = "" }: { className?: string }) => (
     rel="noopener noreferrer"
     className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}
   >
-    Accéder à la formation
+    Je transforme l'écriture de mon enfant
     <ArrowRight className="h-4 w-4" />
   </a>
+);
+
+const ScarcityBadge = () => (
+  <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 border border-destructive/20 px-4 py-1.5 text-sm font-medium text-destructive">
+    <Clock className="h-4 w-4" />
+    Offre limitée
+  </div>
 );
 
 const StarRating = () => (
@@ -94,7 +101,7 @@ const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: strin
   );
 };
 
-const VideoPlayer = () => {
+const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string }) => {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -103,14 +110,12 @@ const VideoPlayer = () => {
         <>
           <iframe
             className="absolute inset-0 w-full h-full"
-            src="https://www.youtube-nocookie.com/embed/v_fGvVDtA7o?rel=0&modestbranding=1&controls=1&autoplay=1&showinfo=0&iv_load_policy=3"
-            title="Présentation de la méthode"
+            src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&autoplay=1&showinfo=0&iv_load_policy=3`}
+            title={title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           />
-          {/* Top overlay — hides YT logo, title, channel */}
           <div className="absolute top-0 left-0 right-0 h-14 z-10 bg-gradient-to-b from-black/80 to-transparent pointer-events-auto" />
-          {/* Bottom-right overlay — hides YT watermark */}
           <div className="absolute bottom-0 right-0 w-20 h-12 z-10 pointer-events-auto" />
         </>
       ) : (
@@ -119,8 +124,8 @@ const VideoPlayer = () => {
           className="absolute inset-0 w-full h-full z-10 flex items-center justify-center bg-black group cursor-pointer"
         >
           <img
-            src={`https://img.youtube.com/vi/v_fGvVDtA7o/maxresdefault.jpg`}
-            alt="Miniature vidéo"
+            src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+            alt={title}
             className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-90 transition-opacity"
           />
           <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-accent/90 shadow-2xl group-hover:scale-110 transition-transform">
@@ -168,6 +173,8 @@ const Index = () => {
           <p className="text-lg md:text-xl text-hero-foreground/75 leading-relaxed mb-10 max-w-xl mx-auto">
             Les réponses que tu as données montrent que la méthode peut vraiment aider ton enfant.
           </p>
+          <ScarcityBadge />
+          <div className="mt-6" />
           <CtaButton />
           <div className="mt-16 animate-bounce">
             <ChevronDown className="h-6 w-6 mx-auto text-hero-foreground/40" />
@@ -280,7 +287,7 @@ const Index = () => {
           <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
             Samirra t'explique comment fonctionne la méthode et pourquoi elle donne des résultats concrets.
           </p>
-          <VideoPlayer />
+          <LockedVideoPlayer videoId="v_fGvVDtA7o" title="Présentation de la méthode" />
         </div>
       </section>
 
@@ -314,6 +321,20 @@ const Index = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* SECTION — Preuve vidéo */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Preuve en vidéo</p>
+          <h2 className="text-3xl md:text-4xl text-center mb-3">
+            Regarde les résultats par toi-même
+          </h2>
+          <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
+            Une vidéo qui montre concrètement l'impact de la méthode sur l'écriture des enfants.
+          </p>
+          <LockedVideoPlayer videoId="pPn2V-jQUNg" title="Preuve vidéo — Résultats de la méthode" />
         </div>
       </section>
 
@@ -507,6 +528,9 @@ const Index = () => {
             Accède à la formation complète
           </h2>
           <div className="rounded-2xl border-2 border-accent/30 bg-background p-8 md:p-12 shadow-xl">
+            <div className="mb-4 flex justify-center">
+              <ScarcityBadge />
+            </div>
             <p className="text-muted-foreground line-through text-lg mb-1">592 €</p>
             <p className="text-5xl md:text-6xl font-bold text-accent mb-1">296 €</p>
             <p className="text-sm text-muted-foreground mb-2">
