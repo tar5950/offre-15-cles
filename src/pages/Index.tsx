@@ -279,7 +279,7 @@ const Index = () => {
           <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
             Samirra t'explique comment fonctionne la méthode et pourquoi elle donne des résultats concrets.
           </p>
-          <LockedVideoPlayer videoId="v_fGvVDtA7o" title="Présentation de la méthode" />
+          <LockedVideoPlayer videoId="5xSzPJqBaJg" title="Présentation de la méthode" />
         </div>
       </section>
 
