@@ -173,6 +173,8 @@ const Index = () => {
           <p className="text-lg md:text-xl text-hero-foreground/75 leading-relaxed mb-10 max-w-xl mx-auto">
             Les réponses que tu as données montrent que la méthode peut vraiment aider ton enfant.
           </p>
+          <ScarcityBadge />
+          <div className="mt-6" />
           <CtaButton />
           <div className="mt-16 animate-bounce">
             <ChevronDown className="h-6 w-6 mx-auto text-hero-foreground/40" />
