@@ -16,9 +16,16 @@ const CtaButton = ({ className = "" }: { className?: string }) => (
     rel="noopener noreferrer"
     className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}
   >
-    Accéder à la formation
+    Je transforme l'écriture de mon enfant
     <ArrowRight className="h-4 w-4" />
   </a>
+);
+
+const ScarcityBadge = () => (
+  <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 border border-destructive/20 px-4 py-1.5 text-sm font-medium text-destructive">
+    <Clock className="h-4 w-4" />
+    Offre limitée
+  </div>
 );
 
 const StarRating = () => (
