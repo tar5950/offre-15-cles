@@ -374,6 +374,29 @@ const Index = () => {
             ))}
           </div>
           <div className="mt-10 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
+            <h3 className="text-lg font-semibold mb-2">Compléments d'expertes</h3>
+            <p className="text-sm text-hero-foreground/70 leading-relaxed mb-4">
+              Des interventions de professionnelles reconnues pour enrichir ta pratique :
+            </p>
+            <div className="flex flex-col gap-3">
+              {[
+                { name: "Laura Marie", role: "Orthophoniste" },
+                { name: "Rajae Akrad", role: "Orthopédagogue" },
+                { name: "Léa Helias Petraroli", role: "Orthophoniste" },
+              ].map((expert, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
+                    {expert.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-hero-foreground">{expert.name}</p>
+                    <p className="text-xs text-hero-foreground/50">{expert.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-4 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
             <h3 className="text-lg font-semibold mb-2">Groupe WhatsApp privé</h3>
             <p className="text-sm text-hero-foreground/70 leading-relaxed">
               Rejoins une communauté bienveillante de parents et professionnels formés à la méthode. Échange tes cas pratiques, pose tes questions et bénéficie du soutien du groupe au quotidien.
