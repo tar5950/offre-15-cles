@@ -1,4 +1,4 @@
-import photoSamirra from "@/assets/photo-samirra.png";
+import photoSamirra from "@/assets/photo-samirra.jpg";
 import avantApresEric from "@/assets/avant-apres-eric.png";
 import avantApresLyla from "@/assets/avant-apres-lyla.png";
 import avantApresMarceau from "@/assets/avant-apres-marceau.png";
