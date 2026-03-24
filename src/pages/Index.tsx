@@ -9,11 +9,22 @@ import { useState } from "react";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
 
+const handleCTAClick = () => {
+  if (typeof window !== "undefined" && (window as any).fbq) {
+    (window as any).fbq('track', 'InitiateCheckout', {
+      value: 296,
+      currency: 'EUR',
+      content_name: '15 Clés Parents'
+    });
+  }
+};
+
 const CtaButton = ({ className = "" }: { className?: string }) => (
   <a
     href={CTA_URL}
     target="_blank"
     rel="noopener noreferrer"
+    onClick={handleCTAClick}
     className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}
   >
     Je transforme l'écriture de mon enfant
@@ -115,9 +126,7 @@ const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             sandbox="allow-scripts allow-same-origin allow-presentation"
           />
-          {/* Voile haut pour bloquer logo YouTube */}
           <div className="absolute top-0 left-0 right-0 h-16 z-10" />
-          {/* Voile bas-droit pour bloquer logo YouTube watermark */}
           <div className="absolute bottom-0 right-0 w-40 h-20 z-10" />
         </>
       ) : (
@@ -196,7 +205,6 @@ const Index = () => {
               </p>
             </div>
           </div>
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-6 mt-12 max-w-xl mx-auto md:mx-0 md:ml-auto md:max-w-lg">
             {[
               { value: "15+", label: "ans d'expérience" },
