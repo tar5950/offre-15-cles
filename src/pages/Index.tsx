@@ -283,12 +283,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-10">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <CtaButton />
-        </div>
-      </section>
 
       {/* SECTION — Avant / Après */}
       <section className="py-16 md:py-24 bg-card">
