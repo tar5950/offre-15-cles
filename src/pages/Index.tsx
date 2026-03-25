@@ -434,7 +434,6 @@ const Index = () => {
             {[
               { icon: <Gift className="h-5 w-5" />, title: "Module réflexe d'agrippement" },
               { icon: <Gift className="h-5 w-5" />, title: "Module spécifique pour les enfants gauchers" },
-              { icon: <MessageCircle className="h-5 w-5" />, title: "Accès au groupe WhatsApp privé" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-3 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-5 text-left">
                 <div className="shrink-0 text-accent">{b.icon}</div>
