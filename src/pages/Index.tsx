@@ -525,7 +525,7 @@ const Index = () => {
             </div>
             <p className="text-sm text-muted-foreground mt-6">
               Tu as encore une question avant de te lancer ?{" "}
-              
+              <a
                 href="https://wa.me/33611901805"
                 target="_blank"
                 rel="noopener noreferrer"
