@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 interface Message {
   role: "user" | "assistant";
@@ -15,12 +15,80 @@ export default function ChatWidget({ persona }: ChatWidgetProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const hasAutoOpenedRef = useRef(false);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isOverVideoRef = useRef(false);
 
   const welcomeMessage =
     persona === "parent"
       ? "Coucou ! 👋 Je suis Nina, de l'équipe Trari Pédagogie. Tu as une question sur la méthode ? Je suis là !"
       : "Bonjour ! 👋 Je suis Nina, de l'équipe Trari Pédagogie. Vous avez une question sur la méthode ? Je suis disponible !";
 
+  // Auto-open (only once)
+  const triggerAutoOpen = useCallback(() => {
+    if (!hasAutoOpenedRef.current) {
+      hasAutoOpenedRef.current = true;
+      setIsOpen(true);
+    }
+  }, []);
+
+  // Inactivity timer
+  const resetInactivityTimer = useCallback(() => {
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    if (!isOverVideoRef.current && !hasAutoOpenedRef.current) {
+      inactivityTimerRef.current = setTimeout(() => {
+        triggerAutoOpen();
+      }, 10000);
+    }
+  }, [triggerAutoOpen]);
+
+  useEffect(() => {
+    // Scroll to bottom detection
+    const handleScroll = () => {
+      if (hasAutoOpenedRef.current) return;
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+      if (scrolled >= total - 80) {
+        triggerAutoOpen();
+      }
+    };
+
+    // Mouse inactivity
+    const handleMouseMove = () => resetInactivityTimer();
+
+    // Video hover — pause inactivity timer while on iframe/video
+    const attachVideoListeners = () => {
+      const videoEls = document.querySelectorAll("iframe, video");
+      videoEls.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          isOverVideoRef.current = true;
+          if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+        });
+        el.addEventListener("mouseleave", () => {
+          isOverVideoRef.current = false;
+          resetInactivityTimer();
+        });
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
+
+    // Attach video listeners after a short delay (let the page render iframes)
+    const videoAttachDelay = setTimeout(attachVideoListeners, 1500);
+
+    // Start initial inactivity timer
+    resetInactivityTimer();
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(videoAttachDelay);
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    };
+  }, [resetInactivityTimer, triggerAutoOpen]);
+
+  // Welcome message on open
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       setMessages([{ role: "assistant", content: welcomeMessage }]);
