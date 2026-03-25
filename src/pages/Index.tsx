@@ -7,7 +7,7 @@ import logo from "@/assets/pedagogie_noir.svg";
 import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users, Clock } from "lucide-react";
 import { useState } from "react";
 
-const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
+const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2-offre-speciale/buy";
 
 const handleCTAClick = () => {
   if (typeof window !== "undefined" && (window as any).fbq) {
