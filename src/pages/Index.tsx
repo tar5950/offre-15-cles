@@ -1,3 +1,4 @@
+import ChatWidget from "@/components/ChatWidget";
 import photoSamirra from "@/assets/photo-samirra.jpg";
 import avantApresEric from "@/assets/avant-apres-eric.png";
 import avantApresLyla from "@/assets/avant-apres-lyla.png";
@@ -556,6 +557,7 @@ const Index = () => {
           <p>© {new Date().getFullYear()} Samirra Trari — Graphopédagogie</p>
         </div>
       </footer>
+      <ChatWidget persona="parent" />
     </div>
   );
 };
