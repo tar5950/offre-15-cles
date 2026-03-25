@@ -7,7 +7,7 @@ import logo from "@/assets/pedagogie_noir.svg";
 import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users, Clock } from "lucide-react";
 import { useState } from "react";
 
-const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2/buy";
+const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2-offre-speciale/buy";
 
 const handleCTAClick = () => {
   if (typeof window !== "undefined" && (window as any).fbq) {
@@ -434,7 +434,6 @@ const Index = () => {
             {[
               { icon: <Gift className="h-5 w-5" />, title: "Module réflexe d'agrippement" },
               { icon: <Gift className="h-5 w-5" />, title: "Module spécifique pour les enfants gauchers" },
-              { icon: <Award className="h-5 w-5" />, title: "Compléments d'expertes" },
               { icon: <MessageCircle className="h-5 w-5" />, title: "Accès au groupe WhatsApp privé" },
             ].map((b, i) => (
               <div key={i} className="flex items-center gap-3 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-5 text-left">
@@ -442,29 +441,6 @@ const Index = () => {
                 <span className="text-sm font-medium text-hero-foreground">{b.title}</span>
               </div>
             ))}
-          </div>
-          <div className="mt-10 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
-            <h3 className="text-lg font-semibold mb-2">Compléments d'expertes</h3>
-            <p className="text-sm text-hero-foreground/70 leading-relaxed mb-4">
-              Des interventions de professionnelles reconnues pour t'accompagner encore plus loin :
-            </p>
-            <div className="flex flex-col gap-3">
-              {[
-                { name: "Laura Marie", role: "Orthophoniste" },
-                { name: "Rajae Akrad", role: "Orthopédagogue" },
-                { name: "Léa Helias Petraroli", role: "Orthophoniste" },
-              ].map((expert, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-xs font-bold text-accent">
-                    {expert.name[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-hero-foreground">{expert.name}</p>
-                    <p className="text-xs text-hero-foreground/50">{expert.role}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
           <div className="mt-4 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
             <h3 className="text-lg font-semibold mb-2">Groupe WhatsApp privé</h3>
@@ -549,7 +525,7 @@ const Index = () => {
             </div>
             <p className="text-sm text-muted-foreground mt-6">
               Tu as encore une question avant de te lancer ?{" "}
-              
+              <a
                 href="https://wa.me/33611901805"
                 target="_blank"
                 rel="noopener noreferrer"
