@@ -517,8 +517,8 @@ const Index = () => {
           </p>
         </div>
       </section>
-
-      {/* SECTION — Prix */}
+      
+{/* SECTION — Prix */}
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-lg px-4 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Prête à te lancer ?</p>
