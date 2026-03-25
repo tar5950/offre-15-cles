@@ -6,7 +6,8 @@ import avantApresMarceau from "@/assets/avant-apres-marceau.png";
 import avantApresLouka from "@/assets/avant-apres-louka.png";
 import logo from "@/assets/pedagogie_noir.svg";
 import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users, Clock } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2-offre-speciale/buy";
 
@@ -20,7 +21,7 @@ const handleCTAClick = () => {
   }
 };
 
-const CtaButton = ({ className = "" }: { className?: string }) => (
+const CtaButton = ({ className = "", enfantName = "" }: { className?: string; enfantName?: string }) => (
   <a
     href={CTA_URL}
     target="_blank"
@@ -28,7 +29,7 @@ const CtaButton = ({ className = "" }: { className?: string }) => (
     onClick={handleCTAClick}
     className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}
   >
-    Je transforme l'écriture de mon enfant
+    {enfantName ? `Je transforme l'écriture de ${enfantName}` : "Je transforme l'écriture de mon enfant"}
     <ArrowRight className="h-4 w-4" />
   </a>
 );
@@ -150,6 +151,10 @@ const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string 
 };
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  const prenom = useMemo(() => searchParams.get("prenom") || "", [searchParams]);
+  const enfant = useMemo(() => searchParams.get("enfant") || "", [searchParams]);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navbar */}
@@ -169,11 +174,17 @@ const Index = () => {
             <CheckCircle className="h-10 w-10 text-success" />
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] leading-tight mb-6">
-            Bonne nouvelle : il est possible{" "}
-            <span className="italic text-accent">d'aider ton enfant.</span>
+            {prenom ? `Bonne nouvelle, ${prenom} :` : "Bonne nouvelle :"}{" "}
+            <span className="italic text-accent">
+              {enfant
+                ? `${enfant} peut retrouver une écriture fluide.`
+                : "les difficultés de ton enfant ont une solution concrète."}
+            </span>
           </h1>
           <p className="text-lg md:text-xl text-hero-foreground/75 leading-relaxed mb-10 max-w-xl mx-auto">
-            Les réponses que tu as données montrent que la méthode peut vraiment aider ton enfant.
+            D'après tes réponses, la méthode des 15 Clés peut aider{" "}
+            {enfant ? <strong>{enfant}</strong> : "ton enfant"}{" "}
+            à retrouver une écriture fluide, sans douleur, en 10 minutes par jour à la maison.
           </p>
           <ScarcityBadge />
           <div className="mt-16 animate-bounce">
@@ -293,7 +304,7 @@ const Index = () => {
       {/* CTA */}
       <section className="py-10">
         <div className="mx-auto max-w-3xl px-4 text-center">
-          <CtaButton />
+          <CtaButton enfantName={enfant} />
         </div>
       </section>
 
@@ -420,7 +431,7 @@ const Index = () => {
       {/* CTA mid */}
       <section className="py-10 bg-card">
         <div className="mx-auto max-w-3xl px-4 text-center">
-          <CtaButton />
+          <CtaButton enfantName={enfant} />
         </div>
       </section>
 
@@ -542,12 +553,14 @@ const Index = () => {
       <section className="py-20 bg-hero text-hero-foreground">
         <div className="mx-auto max-w-2xl px-4 text-center">
           <h2 className="text-3xl md:text-4xl mb-4">
-            Prête à transformer l'écriture de ton enfant ?
+            {prenom
+              ? `${prenom}, prête à transformer l'écriture ${enfant ? `de ${enfant}` : "de ton enfant"} ?`
+              : "Prête à transformer l'écriture de ton enfant ?"}
           </h2>
           <p className="text-hero-foreground/65 mb-10 max-w-md mx-auto">
             Rejoins les milliers de parents qui ont déjà fait confiance à la méthode.
           </p>
-          <CtaButton />
+          <CtaButton enfantName={enfant} />
         </div>
       </section>
 
