@@ -106,7 +106,7 @@ export default function ChatWidget({ persona }: ChatWidgetProps) {
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
     try {
-      const res = await fetch("http://204.168.143.240:3001/api/chat", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage, persona }),
