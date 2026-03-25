@@ -547,6 +547,17 @@ const Index = () => {
                 ✓ Accès immédiat après inscription
               </p>
             </div>
+            <p className="text-sm text-muted-foreground mt-6">
+              Tu as encore une question avant de te lancer ?{" "}
+              
+                href="https://wa.me/33611901805"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline hover:brightness-110 transition"
+              >
+                Écris-moi directement sur WhatsApp 😄
+              </a>
+            </p>
           </div>
         </div>
       </section>
