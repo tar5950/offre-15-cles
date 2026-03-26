@@ -52,6 +52,65 @@ const PAIN_HOOKS: Record<string, { h1: (enfant: string) => string; sub: (enfant:
   },
 };
 
+// Personnalisation complète par pain point
+const PAIN_CONTENT: Record<string, {
+  constatInsight: string;
+  clesHighlight: number[];
+  ceQueNon: string[];
+  faqFirst?: number;
+  testimonialOrder: number[];
+}> = {
+  douleur: {
+    constatInsight: "Dans le cas de la douleur, c'est souvent une tension musculaire et une mauvaise posture du bras qui créent une fatigue excessive — même sur de courts textes.",
+    clesHighlight: [6, 7, 8],
+    ceQueNon: ["Une douleur 'normale' qu'il faut accepter", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
+    testimonialOrder: [3, 4, 0, 1, 2],
+  },
+  lenteur: {
+    constatInsight: "La lenteur vient presque toujours d'un geste qui demande trop d'effort : le cerveau contrôle chaque trait consciemment au lieu de laisser la main aller naturellement.",
+    clesHighlight: [10, 11, 12],
+    ceQueNon: ["Un enfant 'naturellement' lent qui ne peut pas s'améliorer", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
+    testimonialOrder: [0, 2, 1, 3, 4],
+  },
+  tenue: {
+    constatInsight: "La tenue du stylo conditionne tout le reste : une prise incorrecte crée de la fatigue, bloque la fluidité et finit souvent par provoquer de la douleur.",
+    clesHighlight: [8, 9, 5],
+    ceQueNon: ["Une mauvaise tenue définitive qu'on ne peut plus corriger", "Une approche théorique difficile à appliquer", "Une formation réservée aux spécialistes"],
+    testimonialOrder: [3, 0, 1, 2, 4],
+  },
+  pleurs: {
+    constatInsight: "Les pleurs et le découragement viennent d'un enfant qui fournit beaucoup d'effort pour peu de résultat visible — pas d'une incapacité ou d'un manque de volonté.",
+    clesHighlight: [2, 14, 11],
+    ceQueNon: ["Un enfant 'paresseux' ou qui manque de motivation", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
+    testimonialOrder: [4, 0, 1, 2, 3],
+  },
+  illegible: {
+    constatInsight: "L'illisibilité vient du tracé des lettres lui-même : quand les formes de base n'ont pas été bien intégrées, l'écriture reste instable et difficile à déchiffrer.",
+    clesHighlight: [11, 12, 13],
+    ceQueNon: ["Une écriture illisible liée à un manque d'intelligence ou de soin", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
+    testimonialOrder: [2, 0, 1, 3, 4],
+  },
+  gaucher: {
+    constatInsight: "Pour les gauchers, la plupart des outils et enseignements sont pensés pour les droitiers. La latéralisation et l'inclinaison du support sont des ajustements essentiels.",
+    clesHighlight: [3, 9, 6],
+    ceQueNon: ["Forcer un gaucher à écrire de la main droite", "Une approche théorique difficile à appliquer", "Une formation réservée aux spécialistes"],
+    faqFirst: 3,
+    testimonialOrder: [1, 3, 0, 2, 4],
+  },
+  pression: {
+    constatInsight: "Une pression excessive révèle une tension globale dans le geste : l'enfant compense un manque de contrôle fin par une prise en force, ce qui accentue la fatigue.",
+    clesHighlight: [6, 7, 8],
+    ceQueNon: ["Un enfant 'volontairement trop appuyé' qui refuse d'écouter", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
+    testimonialOrder: [3, 0, 1, 2, 4],
+  },
+  default: {
+    constatInsight: "",
+    clesHighlight: [],
+    ceQueNon: ["Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices", "Une formation réservée uniquement aux spécialistes"],
+    testimonialOrder: [0, 1, 2, 3, 4],
+  },
+};
+
 const CtaButton = ({ className = "", enfantName = "" }: { className?: string; enfantName?: string }) => (
   <a href={CTA_URL} target="_blank" rel="noopener noreferrer" onClick={handleCTAClick}
     className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}>
@@ -99,13 +158,13 @@ const keys = [
   { title: "Les outils scripteurs", desc: "Trouve les crayons et stylos les mieux adaptés pour ton enfant." },
 ];
 
-const KeyItem = ({ num, title, desc }: { num: number; title: string; desc: string }) => {
+const KeyItem = ({ num, title, desc, highlighted }: { num: number; title: string; desc: string; highlighted?: boolean }) => {
   const [open, setOpen] = useState(false);
   return (
-    <button onClick={() => setOpen(!open)} className="w-full text-left rounded-xl border border-border bg-background p-4 md:p-5 transition-all hover:shadow-md">
+    <button onClick={() => setOpen(!open)} className={`w-full text-left rounded-xl border p-4 md:p-5 transition-all hover:shadow-md ${highlighted ? "border-accent bg-accent/5 shadow-sm" : "border-border bg-background"}`}>
       <div className="flex items-center gap-4">
-        <span className="shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">{num}</span>
-        <span className="font-medium text-foreground flex-1">{title}</span>
+        <span className={`shrink-0 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${highlighted ? "bg-accent text-accent-foreground" : "bg-accent/10 text-accent"}`}>{num}</span>
+        <span className={`font-medium flex-1 ${highlighted ? "text-accent" : "text-foreground"}`}>{title}{highlighted && <span className="ml-2 text-xs font-normal bg-accent/20 text-accent px-2 py-0.5 rounded-full">Clé pour toi</span>}</span>
         <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </div>
       {open && <p className="mt-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">{desc}</p>}
@@ -168,6 +227,13 @@ const Index = () => {
   const enfant = useMemo(() => searchParams.get("enfant") || "", [searchParams]);
   const pain = useMemo(() => searchParams.get("pain") || "default", [searchParams]);
   const hook = PAIN_HOOKS[pain] ?? PAIN_HOOKS.default;
+  const painContent = PAIN_CONTENT[pain] ?? PAIN_CONTENT.default;
+  const orderedTestimonials = useMemo(() => painContent.testimonialOrder.map(i => testimonials[i]), [painContent]);
+  const orderedFaq = useMemo(() => {
+    if (painContent.faqFirst == null) return FAQ_ITEMS;
+    const first = FAQ_ITEMS[painContent.faqFirst];
+    return [first, ...FAQ_ITEMS.filter((_, i) => i !== painContent.faqFirst)];
+  }, [painContent]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -227,12 +293,22 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Le constat</p>
           <h2 className="text-3xl md:text-4xl mb-4">Pourquoi {enfant || "ton enfant"} rencontre des difficultés d'écriture ?</h2>
           <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Très souvent, les difficultés d'écriture ne viennent pas d'un manque d'effort ou de motivation.</p>
-          <p className="text-foreground font-medium mb-10">Elles viennent d'un geste graphique qui ne s'est pas installé correctement.</p>
+          <p className="text-foreground font-medium mb-4">Elles viennent d'un geste graphique qui ne s'est pas installé correctement.</p>
+          {painContent.constatInsight && (
+            <p className="text-sm text-accent font-medium mb-10 max-w-xl mx-auto bg-accent/5 border border-accent/20 rounded-xl px-5 py-3">{painContent.constatInsight}</p>
+          )}
+          {!painContent.constatInsight && <div className="mb-10" />}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {[{ icon: "🪑", label: "Posture" }, { icon: "🤲", label: "Coordination bras-poignet-main" }, { icon: "✏️", label: "Tenue du crayon" }, { icon: "💪", label: "Pression du stylo" }, { icon: "✍️", label: "Organisation du geste graphique" }].map((item, i) => (
-              <div key={i} className={`flex flex-col items-center gap-2 rounded-xl bg-background p-4 border ${pain === "tenue" && item.label === "Tenue du crayon" ? "border-accent bg-accent/5" : pain === "pression" && item.label === "Pression du stylo" ? "border-accent bg-accent/5" : pain === "posture" && item.label === "Posture" ? "border-accent bg-accent/5" : "border-border"}`}>
+            {[
+              { icon: "🪑", label: "Posture", pains: ["pression", "douleur"] },
+              { icon: "🤲", label: "Coordination bras-poignet-main", pains: ["lenteur"] },
+              { icon: "✏️", label: "Tenue du crayon", pains: ["tenue", "gaucher"] },
+              { icon: "💪", label: "Pression du stylo", pains: ["pression", "douleur"] },
+              { icon: "✍️", label: "Organisation du geste graphique", pains: ["illegible", "pleurs", "lenteur"] },
+            ].map((item, i) => (
+              <div key={i} className={`flex flex-col items-center gap-2 rounded-xl bg-background p-4 border transition-all ${item.pains.includes(pain) ? "border-accent bg-accent/5 shadow-sm" : "border-border"}`}>
                 <span className="text-2xl">{item.icon}</span>
-                <span className="text-xs font-medium text-foreground text-center">{item.label}</span>
+                <span className={`text-xs font-medium text-center ${item.pains.includes(pain) ? "text-accent" : "text-foreground"}`}>{item.label}</span>
               </div>
             ))}
           </div>
@@ -305,7 +381,7 @@ const Index = () => {
           <h2 className="text-3xl md:text-4xl text-center mb-3">Ce qu'en disent les parents</h2>
           <div className="flex items-center justify-center gap-2 mb-10"><StarRating /><span className="text-sm text-muted-foreground ml-1">5/5 — Avis vérifiés</span></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
+            {orderedTestimonials.map((t, i) => (
               <div key={i} className="rounded-xl border border-border bg-card p-6 flex flex-col hover:shadow-md transition-shadow duration-300">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">{t.name[0]}</div>
@@ -342,7 +418,7 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Programme détaillé</p>
           <h2 className="text-3xl md:text-4xl text-center mb-3">Les clés de la méthode</h2>
           <p className="text-center text-muted-foreground mb-10">Clique sur une clé pour découvrir son contenu</p>
-          <div className="flex flex-col gap-3">{keys.map((k, i) => <KeyItem key={i} num={i + 1} title={k.title} desc={k.desc} />)}</div>
+          <div className="flex flex-col gap-3">{keys.map((k, i) => <KeyItem key={i} num={i + 1} title={k.title} desc={k.desc} highlighted={painContent.clesHighlight.includes(i + 1)} />)}</div>
         </div>
       </section>
 
@@ -374,7 +450,7 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Clarification</p>
           <h2 className="text-3xl md:text-4xl mb-10">Ce que cette formation n'est pas</h2>
           <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
-            {["Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices", "Une formation réservée uniquement aux spécialistes"].map((item, i) => (
+            {painContent.ceQueNon.map((item, i) => (
               <div key={i} className="flex items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-left">
                 <X className="h-5 w-5 text-destructive shrink-0" /><span className="text-sm text-foreground">{item}</span>
               </div>
@@ -401,7 +477,7 @@ const Index = () => {
           <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Questions fréquentes</p>
           <h2 className="text-3xl md:text-4xl text-center mb-10">Tu as des questions ?</h2>
           <div className="flex flex-col gap-3">
-            {FAQ_ITEMS.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
+            {orderedFaq.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
           </div>
         </div>
       </section>
