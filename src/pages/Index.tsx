@@ -517,8 +517,12 @@ const Index = () => {
       </section>
 
       <footer className="py-8 border-t border-border">
-        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-muted-foreground">
+        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-muted-foreground space-y-2">
           <p>© {new Date().getFullYear()} Samirra Trari — Graphopédagogie</p>
+          <div className="flex justify-center gap-4">
+            <a href="/politique-de-confidentialite" className="hover:text-foreground underline">Politique de confidentialité</a>
+            <a href="/cgv" className="hover:text-foreground underline">CGV</a>
+          </div>
         </div>
       </footer>
       <ChatWidget persona="parent" />
