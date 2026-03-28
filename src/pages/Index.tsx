@@ -121,6 +121,62 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+const PAYMENT_SVGS = (
+  <div className="flex items-center justify-center gap-2 flex-wrap mt-2">
+    <svg viewBox="0 0 60 38" className="h-6 w-auto rounded shadow-sm" aria-label="Visa">
+      <rect width="60" height="38" rx="5" fill="#1A1F71"/>
+      <text x="30" y="26" textAnchor="middle" fill="#F7B600" fontSize="18" fontWeight="bold" fontFamily="Arial,sans-serif" letterSpacing="1" fontStyle="italic">VISA</text>
+    </svg>
+    <svg viewBox="0 0 60 38" className="h-6 w-auto rounded shadow-sm" aria-label="Mastercard">
+      <rect width="60" height="38" rx="5" fill="white" stroke="#e5e7eb"/>
+      <circle cx="24" cy="19" r="12" fill="#EB001B"/>
+      <circle cx="36" cy="19" r="12" fill="#F79E1B"/>
+      <path d="M30 9.5a12 12 0 0 1 0 19A12 12 0 0 1 30 9.5z" fill="#FF5F00"/>
+    </svg>
+    <svg viewBox="0 0 60 38" className="h-6 w-auto rounded shadow-sm" aria-label="CB">
+      <rect width="60" height="38" rx="5" fill="#0066B2"/>
+      <text x="30" y="25" textAnchor="middle" fill="white" fontSize="15" fontWeight="bold" fontFamily="Arial,sans-serif" letterSpacing="2">CB</text>
+    </svg>
+    <svg viewBox="0 0 60 38" className="h-6 w-auto rounded shadow-sm" aria-label="Amex">
+      <rect width="60" height="38" rx="5" fill="#016FD0"/>
+      <text x="30" y="22" textAnchor="middle" fill="white" fontSize="7.5" fontWeight="bold" fontFamily="Arial,sans-serif">AMERICAN</text>
+      <text x="30" y="31" textAnchor="middle" fill="white" fontSize="7.5" fontWeight="bold" fontFamily="Arial,sans-serif">EXPRESS</text>
+    </svg>
+    <svg viewBox="0 0 60 38" className="h-6 w-auto rounded shadow-sm" aria-label="Stripe">
+      <rect width="60" height="38" rx="5" fill="#635BFF"/>
+      <text x="30" y="25" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold" fontFamily="Arial,sans-serif">stripe</text>
+    </svg>
+  </div>
+);
+
+function PaymentBadges() {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <p className="text-xs text-gray-500 flex items-center gap-1.5">
+        <svg className="w-3.5 h-3.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        Paiement 100% sécurisé · SSL 256 bits
+      </p>
+      {PAYMENT_SVGS}
+    </div>
+  );
+}
+
+function PaymentBadgesLight() {
+  return (
+    <div className="flex flex-col items-center gap-1 opacity-90">
+      <p className="text-xs text-white/70 flex items-center gap-1.5">
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        Paiement sécurisé · SSL 256 bits · Accès immédiat
+      </p>
+      {PAYMENT_SVGS}
+    </div>
+  );
+}
+
 export default function Index() {
   const [searchParams] = useSearchParams();
   const prenom = searchParams.get("prenom") || "";
@@ -216,11 +272,7 @@ export default function Index() {
               Je saisis cette dernière chance
               <ArrowRight className="w-5 h-5" />
             </button>
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              <ShieldCheck className="w-4 h-4" /> Paiement 100% sécurisé
-              <span>·</span>
-              <CheckCircle className="w-4 h-4" /> Accès immédiat
-            </div>
+            <PaymentBadges />
           </div>
         </div>
       </section>
@@ -343,10 +395,7 @@ export default function Index() {
             Je saisis cette dernière chance
             <ArrowRight className="w-5 h-5" />
           </button>
-          <div className="mt-4 flex items-center justify-center gap-4 text-sm opacity-80">
-            <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4" /> Paiement sécurisé</span>
-            <span className="flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Accès immédiat</span>
-          </div>
+          <div className="mt-4"><PaymentBadgesLight /></div>
         </div>
       </section>
 
