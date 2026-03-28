@@ -177,6 +177,152 @@ function PaymentBadgesLight() {
   );
 }
 
+// ─── REASONS FEEDBACK ─────────────────────────────────────────────────────────
+const EXIT_REASONS = [
+  { id: "price", label: "Le prix est trop élevé pour moi", icon: "💰" },
+  { id: "unsure", label: "Je ne suis pas sûr(e) que ça marche pour nous", icon: "🤔" },
+  { id: "time", label: "Je n'ai pas le temps maintenant", icon: "⏰" },
+  { id: "think", label: "Je veux réfléchir encore un peu", icon: "💭" },
+  { id: "other", label: "Autre raison", icon: "💬" },
+];
+
+const FEEDBACK_ENDPOINT = "http://204.168.143.240:8080/feedback";
+
+function ExitIntentPopup({ onClose, persona }: { onClose: () => void; persona: string }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const handleSend = async () => {
+    if (!selected) return;
+    try {
+      await fetch(FEEDBACK_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reason: selected,
+          email: email || "inconnu",
+          persona,
+          source: "exit_intent_offre",
+          url: window.location.href,
+          ts: new Date().toISOString(),
+        }),
+        mode: "no-cors",
+      });
+    } catch (_) {}
+    setSent(true);
+    setTimeout(onClose, 3000);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden">
+        {!sent ? (
+          <>
+            <div className="bg-[#1B2B4B] text-white px-6 py-5">
+              <p className="text-xs uppercase tracking-widest text-[#E8892B] font-semibold mb-1">30 secondes pour nous aider</p>
+              <h3 className="text-lg font-bold leading-snug">Avant de partir — qu'est-ce qui vous retient ?</h3>
+              <p className="text-sm text-white/60 mt-1">Votre réponse nous aide à mieux vous accompagner.</p>
+            </div>
+            <div className="px-6 py-4 flex flex-col gap-2.5">
+              {EXIT_REASONS.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => setSelected(r.id)}
+                  className={`flex items-center gap-3 text-left px-4 py-3 rounded-xl border-2 transition-all text-sm font-medium ${
+                    selected === r.id
+                      ? "border-[#E8892B] bg-orange-50 text-[#C97420]"
+                      : "border-gray-200 hover:border-gray-300 text-gray-700"
+                  }`}
+                >
+                  <span className="text-xl">{r.icon}</span>
+                  {r.label}
+                </button>
+              ))}
+
+              {selected === "price" && (
+                <div className="mt-1 p-3 bg-green-50 rounded-xl border border-green-200 text-sm text-green-800">
+                  💡 Saviez-vous que vous pouvez payer en <strong>2 fois 118€ sans frais</strong> ?
+                </div>
+              )}
+
+              <input
+                type="email"
+                placeholder="Votre email (facultatif, pour vous recontacter)"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm w-full focus:outline-none focus:border-[#E8892B]"
+              />
+
+              <div className="flex gap-2 mt-1">
+                <button
+                  onClick={handleSend}
+                  disabled={!selected}
+                  className="flex-1 py-3 bg-[#E8892B] text-white rounded-xl font-semibold text-sm disabled:opacity-40 hover:bg-[#C97420] transition-colors"
+                >
+                  Envoyer mon retour
+                </button>
+                <button
+                  onClick={onClose}
+                  className="px-4 py-3 text-gray-400 hover:text-gray-600 text-sm"
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="px-6 py-10 text-center">
+            <div className="text-4xl mb-3">🙏</div>
+            <h3 className="text-lg font-bold text-[#1B2B4B] mb-2">Merci pour votre retour !</h3>
+            <p className="text-sm text-gray-500">Votre avis nous aide à améliorer notre offre pour mieux vous accompagner.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function useExitIntent(): [boolean, () => void] {
+  const [show, setShow] = useState(false);
+  const fired = useRef(false);
+
+  useEffect(() => {
+    const alreadySeen = sessionStorage.getItem("exit_intent_shown");
+    if (alreadySeen) return;
+
+    // Desktop: mouse leaves viewport toward top
+    const onMouseOut = (e: MouseEvent) => {
+      if (fired.current) return;
+      if (e.clientY <= 5 && e.relatedTarget === null) {
+        fired.current = true;
+        sessionStorage.setItem("exit_intent_shown", "1");
+        setShow(true);
+      }
+    };
+
+    // Mobile: 45s inactivity timer
+    const timer = setTimeout(() => {
+      if (fired.current) return;
+      fired.current = true;
+      sessionStorage.setItem("exit_intent_shown", "1");
+      setShow(true);
+    }, 45000);
+
+    document.addEventListener("mouseout", onMouseOut);
+    return () => {
+      document.removeEventListener("mouseout", onMouseOut);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  return [show, () => setShow(false)];
+}
+
 export default function Index() {
   const [searchParams] = useSearchParams();
   const prenom = searchParams.get("prenom") || "";
@@ -184,6 +330,7 @@ export default function Index() {
   const persona = searchParams.get("persona") || "parent"; // "parent" | "pro"
   const isPro = persona === "pro";
   const { h, m, s, expired } = useCountdown();
+  const [showExitIntent, closeExitIntent] = useExitIntent();
 
   const prenomDisplay = prenom ? `, ${prenom}` : "";
   const enfantDisplay = enfant || "votre enfant";
@@ -438,6 +585,9 @@ export default function Index() {
       </footer>
 
       <ChatWidget persona={isPro ? "pro" : "parent"} />
+
+      {/* Exit-intent feedback popup */}
+      {showExitIntent && <ExitIntentPopup onClose={closeExitIntent} persona={persona} />}
     </div>
   );
 }
