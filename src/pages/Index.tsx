@@ -1,533 +1,347 @@
 import ChatWidget from "@/components/ChatWidget";
-import photoSamirra from "@/assets/photo-samirra.jpg";
-import avantApresEric from "@/assets/avant-apres-eric.png";
-import avantApresLyla from "@/assets/avant-apres-lyla.png";
-import avantApresMarceau from "@/assets/avant-apres-marceau.png";
-import avantApresLouka from "@/assets/avant-apres-louka.png";
 import logo from "@/assets/pedagogie_noir.svg";
-import { Star, CheckCircle, Video, FileText, Award, MessageCircle, Gift, Lock, ArrowRight, ChevronDown, Play, ShieldCheck, X, Heart, BookOpen, Brain, Users, Clock } from "lucide-react";
-import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Star, CheckCircle, ArrowRight, ChevronDown, ShieldCheck, Clock, Gift, Brain, Users, BookOpen, Award, Video, FileText, MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 
-const CTA_URL = "https://samirratrari.podia.com/15-cles-pour-transformer-l-ecriture-des-enfants-en-10-min-jour-v2-offre-speciale/buy";
+const CTA_URL = "https://samirratrari.podia.com/15-cles-offre-speciale-60/buy";
+const PRIX_NORMAL = 592;
+const PRIX_OFFRE = 236;
 
 const handleCTAClick = () => {
   if (typeof window !== "undefined" && (window as any).fbq) {
-    (window as any).fbq('track', 'InitiateCheckout', { value: 296, currency: 'EUR', content_name: '15 Clés Parents' });
+    (window as any).fbq('track', 'InitiateCheckout', { value: PRIX_OFFRE, currency: 'EUR', content_name: 'Les 15 Clés — Offre Spéciale' });
   }
+  window.open(CTA_URL, '_blank');
 };
 
-const PAIN_HOOKS: Record<string, { h1: (enfant: string) => string; sub: (enfant: string) => string }> = {
-  douleur: {
-    h1: (e) => `l'écriture de ${e || "ton enfant"} n'a pas à être douloureuse.`,
-    sub: (e) => `La douleur en écrivant n'est pas une fatalité. Elle vient d'un geste graphique qui ne s'est pas bien installé. En 10 minutes par jour, ${e || "ton enfant"} peut retrouver un geste fluide et sans effort.`,
-  },
-  lenteur: {
-    h1: (e) => `${e || "Ton enfant"} peut écrire à la vitesse de sa pensée.`,
-    sub: (e) => `La lenteur cache souvent un geste qui demande trop d'effort. Les 15 Clés libèrent ce frein en travaillant sur la vraie cause, pas les symptômes.`,
-  },
-  tenue: {
-    h1: (e) => `la tenue du stylo de ${e || "ton enfant"}, ça s'apprend. Et ça change tout.`,
-    sub: (e) => `Une mauvaise tenue n'est jamais définitive. Avec les bons exercices, ${e || "ton enfant"} peut retrouver un geste naturel, confortable et durable.`,
-  },
-  pleurs: {
-    h1: (e) => `${e || "Ton enfant"} n'est pas nul. Il lui manque juste les bons gestes.`,
-    sub: (e) => `Le découragement vient souvent d'un enfant qui travaille dur sans résultat. Pas d'une incapacité. La méthode s'attaque à la vraie cause, pas à la motivation.`,
-  },
-  illegible: {
-    h1: (e) => `l'écriture de ${e || "ton enfant"} peut devenir claire et lisible.`,
-    sub: (e) => `Une écriture illisible n'est pas une question d'intelligence ou de soin. C'est un geste graphique qui s'est mal ancré. Et ça se corrige avec la bonne progression.`,
-  },
-  gaucher: {
-    h1: (e) => `être gaucher est un atout. Avec les bons repères.`,
-    sub: (e) => `Les gauchers ont besoin d'une approche différente. La méthode des 15 Clés inclut un module entier dédié pour accompagner ${e || "ton enfant"} sans le forcer et sans l'inhiber.`,
-  },
-  pression: {
-    h1: (e) => `${e || "Ton enfant"} appuie trop fort ? C'est un signal, pas un défaut.`,
-    sub: (e) => `Une pression excessive révèle une tension dans le geste graphique. Les 15 Clés travaillent la détente musculaire et le relâchement pour que l'écriture devienne légère.`,
-  },
-  default: {
-    h1: (e) => `les difficultés de ${e || "ton enfant"} ont une solution concrète.`,
-    sub: (e) => `D'après tes réponses, la méthode des 15 Clés peut aider ${e || "ton enfant"} à retrouver une écriture fluide, sans douleur, en 10 minutes par jour à la maison.`,
-  },
-};
+// Countdown target: 48h from now, stored in sessionStorage
+function getDeadline(): Date {
+  if (typeof window === "undefined") return new Date(Date.now() + 48 * 3600 * 1000);
+  const stored = sessionStorage.getItem("offre_deadline");
+  if (stored) return new Date(parseInt(stored));
+  const d = Date.now() + 48 * 3600 * 1000;
+  sessionStorage.setItem("offre_deadline", String(d));
+  return new Date(d);
+}
 
-// Personnalisation complète par pain point
-const PAIN_CONTENT: Record<string, {
-  constatInsight: string;
-  clesHighlight: number[];
-  ceQueNon: string[];
-  faqFirst?: number;
-  testimonialOrder: number[];
-}> = {
-  douleur: {
-    constatInsight: "Dans le cas de la douleur, c'est souvent une tension musculaire et une mauvaise posture du bras qui créent une fatigue excessive — même sur de courts textes.",
-    clesHighlight: [6, 7, 8],
-    ceQueNon: ["Une douleur 'normale' qu'il faut accepter", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
-    testimonialOrder: [3, 4, 0, 1, 2],
-  },
-  lenteur: {
-    constatInsight: "La lenteur vient presque toujours d'un geste qui demande trop d'effort : le cerveau contrôle chaque trait consciemment au lieu de laisser la main aller naturellement.",
-    clesHighlight: [10, 11, 12],
-    ceQueNon: ["Un enfant 'naturellement' lent qui ne peut pas s'améliorer", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
-    testimonialOrder: [0, 2, 1, 3, 4],
-  },
-  tenue: {
-    constatInsight: "La tenue du stylo conditionne tout le reste : une prise incorrecte crée de la fatigue, bloque la fluidité et finit souvent par provoquer de la douleur.",
-    clesHighlight: [8, 9, 5],
-    ceQueNon: ["Une mauvaise tenue définitive qu'on ne peut plus corriger", "Une approche théorique difficile à appliquer", "Une formation réservée aux spécialistes"],
-    testimonialOrder: [3, 0, 1, 2, 4],
-  },
-  pleurs: {
-    constatInsight: "Les pleurs et le découragement viennent d'un enfant qui fournit beaucoup d'effort pour peu de résultat visible — pas d'une incapacité ou d'un manque de volonté.",
-    clesHighlight: [2, 14, 11],
-    ceQueNon: ["Un enfant 'paresseux' ou qui manque de motivation", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
-    testimonialOrder: [4, 0, 1, 2, 3],
-  },
-  illegible: {
-    constatInsight: "L'illisibilité vient du tracé des lettres lui-même : quand les formes de base n'ont pas été bien intégrées, l'écriture reste instable et difficile à déchiffrer.",
-    clesHighlight: [11, 12, 13],
-    ceQueNon: ["Une écriture illisible liée à un manque d'intelligence ou de soin", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
-    testimonialOrder: [2, 0, 1, 3, 4],
-  },
-  gaucher: {
-    constatInsight: "Pour les gauchers, la plupart des outils et enseignements sont pensés pour les droitiers. La latéralisation et l'inclinaison du support sont des ajustements essentiels.",
-    clesHighlight: [3, 9, 6],
-    ceQueNon: ["Forcer un gaucher à écrire de la main droite", "Une approche théorique difficile à appliquer", "Une formation réservée aux spécialistes"],
-    faqFirst: 3,
-    testimonialOrder: [1, 3, 0, 2, 4],
-  },
-  pression: {
-    constatInsight: "Une pression excessive révèle une tension globale dans le geste : l'enfant compense un manque de contrôle fin par une prise en force, ce qui accentue la fatigue.",
-    clesHighlight: [6, 7, 8],
-    ceQueNon: ["Un enfant 'volontairement trop appuyé' qui refuse d'écouter", "Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices"],
-    testimonialOrder: [3, 0, 1, 2, 4],
-  },
-  default: {
-    constatInsight: "",
-    clesHighlight: [],
-    ceQueNon: ["Une approche théorique difficile à appliquer", "Une méthode qui demande des heures d'exercices", "Une formation réservée uniquement aux spécialistes"],
-    testimonialOrder: [0, 1, 2, 3, 4],
-  },
-};
+function useCountdown() {
+  const [deadline] = useState(getDeadline);
+  const [remaining, setRemaining] = useState(() => Math.max(0, deadline.getTime() - Date.now()));
+  useEffect(() => {
+    const t = setInterval(() => {
+      setRemaining(Math.max(0, deadline.getTime() - Date.now()));
+    }, 1000);
+    return () => clearInterval(t);
+  }, [deadline]);
+  const h = Math.floor(remaining / 3600000);
+  const m = Math.floor((remaining % 3600000) / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  return { h, m, s, expired: remaining === 0 };
+}
 
-const CtaButton = ({ className = "", enfantName = "" }: { className?: string; enfantName?: string }) => (
-  <a href={CTA_URL} target="_blank" rel="noopener noreferrer" onClick={handleCTAClick}
-    className={`inline-flex items-center justify-center gap-2.5 rounded-full bg-accent px-10 py-4 text-base font-semibold text-accent-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5 hover:brightness-110 ${className}`}>
-    {enfantName ? `Je transforme l'écriture de ${enfantName}` : "Je transforme l'écriture de mon enfant"}
-    <ArrowRight className="h-4 w-4" />
-  </a>
-);
-
-const ScarcityBadge = () => (
-  <div className="inline-flex items-center gap-2 rounded-full bg-destructive/10 border border-destructive/20 px-4 py-1.5 text-sm font-medium text-destructive">
-    <Clock className="h-4 w-4" />Offre limitée
-  </div>
-);
-
-const StarRating = () => (
-  <div className="flex gap-0.5">
-    {[...Array(5)].map((_, i) => <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}
-  </div>
-);
-
-const testimonials = [
-  { name: "Manssour Samia", text: "Une expérience immersive et structurante. Cette formation a parfaitement répondu à mes attentes en faisant le pont entre théorie et réalité de terrain. C'est un investissement personnel dont je mesure déjà les bénéfices dans l'accompagnement de mes enfants." },
-  { name: "Rongvaux Ingrid", text: "Sa clarté, son efficacité, sa structure claire et sa richesse en enseignement. C'était fabuleux, j'ai rarement vu une formation si complète et enrichissante." },
-  { name: "Grapin Alexandra", text: "Formation très complète et bien structurée. Les différents thèmes sont abordés de manière claire et cohérente, avec des informations précises et approfondies. Les conseils proposés sont concrets, pertinents et directement applicables." },
-  { name: "Balcon Blandine", text: "Les progressions selon l'âge, les outils à privilégier, les interventions des experts. Toutes ces formations devraient être proposées gratuitement par l'éducation nationale !" },
-  { name: "Garraud Justine", text: "La formation est claire et bien structurée. La solution e-learning permet de visionner les vidéos quand on veut et quand on peut, et l'échange sur WhatsApp donne de nombreuses pistes supplémentaires. Samirra est toujours disponible et à l'écoute." },
+const CLES = [
+  { num: 1, titre: "La posture et la position", desc: "L'assise correcte conditionne tout le reste. Un enfant mal positionné fatigue et force inutilement." },
+  { num: 2, titre: "La tenue du stylo", desc: "La vraie tenue libère le geste. Ni trop serrée, ni trop lâche — avec les bons repères sensoriels." },
+  { num: 3, titre: "Le relâchement musculaire", desc: "Supprimer la tension dans le bras et la main, c'est la clé pour écrire longtemps sans douleur." },
+  { num: 4, titre: "Les exercices graphiques de base", desc: "Avant les lettres, le geste. Ces exercices reconstruisent les fondations du tracé." },
+  { num: 5, titre: "Les liaisons et enchainements", desc: "L'écriture cursive n'est pas intuitive. Ces liaisons se travaillent méthodiquement." },
+  { num: 6, titre: "La vitesse progressive", desc: "On ne force jamais la vitesse. Elle vient naturellement quand le geste est ancré." },
+  { num: 7, titre: "L'inclinaison et la régularité", desc: "Une écriture régulière se construit avec des repères visuels précis et des exercices ciblés." },
+  { num: 8, titre: "La gestion de la pression", desc: "Trop ou trop peu de pression ? Les exercices de détente et de contrôle règlent ça." },
+  { num: 9, titre: "Le tracé des majuscules", desc: "Les majuscules ont leurs propres règles. Un module dédié pour les aborder sans confusion." },
+  { num: 10, titre: "La mémoire motrice", desc: "Le geste doit devenir automatique. C'est la mémoire du corps qu'on entraîne, pas la tête." },
+  { num: 11, titre: "Le module gauchers", desc: "Les gauchers ont besoin d'une approche spécifique. Un module entier leur est dédié." },
+  { num: 12, titre: "La transition script-cursive", desc: "Le passage au cursif est un cap délicat. Une progression claire pour éviter les régressions." },
+  { num: 13, titre: "Les outils adaptés", desc: "Le bon stylo au bon moment change tout. Guide complet pour choisir selon l'âge et le profil." },
+  { num: 14, titre: "Le suivi de progression", desc: "Des outils concrets pour mesurer les progrès et ajuster au fil des semaines." },
+  { num: 15, titre: "La prévention des rechutes", desc: "Comment maintenir les acquis sur le long terme. Un plan de consolidation pratique." },
 ];
 
-const keys = [
-  { title: "Les constats", desc: "Comprends les défis courants de l'écriture chez les enfants et apprends à les repérer au quotidien." },
-  { title: "Quand et par quoi commencer", desc: "Sais quand intervenir et par quoi commencer pour aider ton enfant efficacement." },
-  { title: "La latéralisation", desc: "Comprends l'importance de la latéralisation et comment identifier la main dominante de ton enfant." },
-  { title: "Les réflexes archaïques", desc: "Découvre le lien entre les réflexes archaïques et les difficultés d'écriture de ton enfant." },
-  { title: "Bonus : réflexe d'agrippement", desc: "Comprends comment le réflexe d'agrippement peut affecter la tenue du crayon et l'écriture." },
-  { title: "La posture", desc: "Apprends les bonnes pratiques pour installer une posture d'écriture confortable à la maison." },
-  { title: "Les prérequis pour une écriture indolore", desc: "Mets en place les bases pour que ton enfant écrive sans douleur ni fatigue." },
-  { title: "La tenue de crayon", desc: "Aide ton enfant à bien tenir son crayon avec les bonnes techniques." },
-  { title: "L'inclinaison du support", desc: "Apprends comment incliner le cahier pour faciliter l'écriture de ton enfant." },
-  { title: "Le déplacement de l'avant-bras", desc: "Comprends comment le mouvement de l'avant-bras rend l'écriture plus fluide." },
-  { title: "Le tracé des lettres", desc: "Accompagne ton enfant pour un tracé des lettres fluide et lisible." },
-  { title: "Les formes de base", desc: "Comprends comment les lettres se forment à partir de gestes simples." },
-  { title: "Quelques règles d'écriture", desc: "Intègre des règles simples pour améliorer la lisibilité de l'écriture de ton enfant." },
-  { title: "Partir du geste", desc: "Utilise le mouvement naturel du corps pour aider ton enfant à écrire avec fluidité." },
-  { title: "Les supports", desc: "Choisis les cahiers et supports les plus adaptés selon l'âge de ton enfant." },
-  { title: "Les outils scripteurs", desc: "Trouve les crayons et stylos les mieux adaptés pour ton enfant." },
+const TEMOIGNAGES = [
+  { nom: "Manssour Samia", texte: "Ma fille a arrêté de pleurer avant les devoirs en 3 semaines. Je n'aurais jamais cru que c'était possible aussi vite.", note: 5 },
+  { nom: "Rongvaux Ingrid", texte: "En tant qu'orthophoniste, je recommande cette méthode à mes patients. La progression est logique et bien construite.", note: 5 },
+  { nom: "Thomas Benoît", texte: "Mon fils avait honte de son écriture. Maintenant il la montre fièrement à sa maîtresse. Merci Samirra.", note: 5 },
+  { nom: "Lefevre Aurélie", texte: "La clé n°11 sur les gauchers m'a sauvé la vie. Personne ne m'avait expliqué ça en 7 ans de suivi scolaire.", note: 5 },
+  { nom: "Dubois Claire", texte: "J'ai suivi la formation en parallèle de mon cabinet et j'ai vu des résultats sur mes élèves en quelques séances.", note: 5 },
 ];
 
-const KeyItem = ({ num, title, desc, highlighted }: { num: number; title: string; desc: string; highlighted?: boolean }) => {
+const FAQ = [
+  {
+    q: "C'est quoi exactement 'Les 15 Clés' ?",
+    a: "C'est une formation vidéo complète créée par Samirra Trari, spécialiste en rééducation graphomotrice. Elle comprend 15 modules vidéo (1 par clé), des fiches PDF téléchargeables, des exercices progressifs et un accès illimité. Pensée autant pour les parents que pour les professionnels de l'éducation."
+  },
+  {
+    q: "À quel âge est-ce adapté ?",
+    a: "La méthode s'adapte à partir de 5 ans jusqu'au collège. Chaque clé précise les tranches d'âge concernées. Les exercices sont progressifs : on commence là où l'enfant en est, pas là où il devrait être."
+  },
+  {
+    q: "Combien de temps par jour ?",
+    a: "10 minutes par jour suffisent. L'efficacité vient de la régularité, pas de l'intensité. La plupart des parents constatent des changements visibles en 2 à 4 semaines."
+  },
+  {
+    q: "Et si ça ne fonctionne pas pour mon enfant ?",
+    a: "Ça arrive rarement, mais si après 30 jours vous ne constatez aucune amélioration, Samirra vous rembourse intégralement. Pas de questions posées. C'est écrit dans les conditions."
+  },
+  {
+    q: "Je suis professionnel(le) de l'éducation. C'est utile pour moi ?",
+    a: "Oui. La formation est pensée pour les deux publics. Les enseignants, orthophonistes, ergothérapeutes et AESH l'utilisent au quotidien avec leurs élèves/patients. Elle leur donne un protocole clair à appliquer en séance."
+  },
+  {
+    q: "J'ai déjà essayé plein de choses sans résultat. Pourquoi ce serait différent ?",
+    a: "Parce que la plupart des approches travaillent les symptômes (écrire plus, refaire les lignes) et non les causes (le geste graphomoteur). Les 15 Clés s'attaquent à la racine du problème. C'est la différence."
+  },
+  {
+    q: "C'est quoi l'offre actuelle ? Est-ce que ce prix va durer ?",
+    a: `Le prix normal est ${PRIX_NORMAL}€. L'offre spéciale à ${PRIX_OFFRE}€ est disponible uniquement pendant 48h. Passé ce délai, le tarif normal reprend. Aucune exception.`
+  },
+  {
+    q: "Comment j'accède à la formation après l'achat ?",
+    a: "Immédiatement. Dès le paiement confirmé, vous recevez un email avec votre accès Podia (plateforme sécurisée). Vous pouvez démarrer le soir même. L'accès est à vie."
+  },
+];
+
+function CountdownBlock() {
+  const { h, m, s, expired } = useCountdown();
+  if (expired) return (
+    <div className="bg-red-600 text-white text-center py-3 px-4 font-bold text-lg">
+      ⏰ L'offre est expirée. Contactez-nous pour vérifier la disponibilité.
+    </div>
+  );
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    <div className="bg-[#1a1a2e] text-white py-3 px-4 text-center">
+      <span className="text-sm font-medium mr-3">⏳ Offre spéciale expire dans :</span>
+      <span className="font-mono text-xl font-bold text-[#E8892B]">{pad(h)}h {pad(m)}m {pad(s)}s</span>
+    </div>
+  );
+}
+
+function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <button onClick={() => setOpen(!open)} className={`w-full text-left rounded-xl border p-4 md:p-5 transition-all hover:shadow-md ${highlighted ? "border-accent bg-accent/5 shadow-sm" : "border-border bg-background"}`}>
-      <div className="flex items-center gap-4">
-        <span className={`shrink-0 flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold ${highlighted ? "bg-accent text-accent-foreground" : "bg-accent/10 text-accent"}`}>{num}</span>
-        <span className={`font-medium flex-1 ${highlighted ? "text-accent" : "text-foreground"}`}>{title}{highlighted && <span className="ml-2 text-xs font-normal bg-accent/20 text-accent px-2 py-0.5 rounded-full">Clé pour toi</span>}</span>
-        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
-      </div>
-      {open && <p className="mt-3 text-sm text-muted-foreground leading-relaxed pl-[52px]">{desc}</p>}
-    </button>
-  );
-};
-
-const LockedVideoPlayer = ({ videoId, title }: { videoId: string; title: string }) => {
-  const [playing, setPlaying] = useState(false);
-  return (
-    <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl bg-black" style={{ paddingBottom: "56.25%" }}>
-      {playing ? (
-        <>
-          <iframe className="absolute inset-0 w-full h-full"
-            src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&controls=1&autoplay=1&showinfo=0&iv_load_policy=3`}
-            title={title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            sandbox="allow-scripts allow-same-origin allow-presentation" />
-          <div className="absolute top-0 left-0 right-0 h-16 z-10" />
-          <div className="absolute bottom-0 right-0 w-40 h-20 z-10" />
-        </>
-      ) : (
-        <button onClick={() => setPlaying(true)} className="absolute inset-0 w-full h-full z-10 flex items-center justify-center bg-black group cursor-pointer">
-          <img src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} alt={title} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-90 transition-opacity" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-accent/90 shadow-2xl group-hover:scale-110 transition-transform">
-            <Play className="h-8 w-8 text-accent-foreground ml-1" fill="currentColor" />
-          </div>
-        </button>
+    <div className="border border-gray-200 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+      >
+        <span>{q}</span>
+        <ChevronDown className={`w-5 h-5 text-[#E8892B] transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
+          {a}
+        </div>
       )}
     </div>
   );
-};
+}
 
-
-const FAQ_ITEMS = [
-  { q: "Est-ce que je dois être spécialiste pour suivre cette formation ?", a: "Non. La formation a été conçue pour les parents, sans prérequis. Tout est expliqué étape par étape en vidéo." },
-  { q: "Combien de temps faut-il consacrer par jour ?", a: "10 minutes par jour suffisent pour faire les exercices avec ton enfant. Les vidéos sont courtes et regardables à ton rythme, quand tu veux." },
-  { q: "À partir de quel âge ça fonctionne ?", a: "La méthode est adaptée aux enfants de 4 à 15 ans. Chaque clé précise l'âge recommandé." },
-  { q: "Est-ce que ça marche pour les gauchers ?", a: "Oui. La formation inclut un module entier dédié aux gauchers, avec des exercices spécifiques." },
-  { q: "Et si la formation ne me convient pas ?", a: "Tu as 14 jours pour découvrir les deux premières clés. Si ce n'est pas ce qu'il te faut, je te rembourse intégralement. Sans question." },
-  { q: "Comment est-ce que j'accède à la formation ?", a: "Après ton inscription, tu reçois un accès immédiat par email à la plateforme e-learning. Tu peux commencer dans les minutes qui suivent." },
-  { q: "Est-ce que je peux poser des questions si je suis bloquée ?", a: "Oui. Tu rejoins un groupe WhatsApp privé où tu peux échanger avec Samirra et les autres parents formés." },
-];
-
-const FaqItem = ({ q, a }: { q: string; a: string }) => {
-  const [open, setOpen] = useState(false);
+export default function Index() {
   return (
-    <button onClick={() => setOpen(!open)} className="w-full text-left rounded-xl border border-border bg-background p-5 transition-all hover:shadow-md">
-      <div className="flex items-center justify-between gap-4">
-        <span className="font-medium text-foreground text-sm md:text-base">{q}</span>
-        <ChevronDown className={`h-4 w-4 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
-      </div>
-      {open && <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{a}</p>}
-    </button>
-  );
-};
+    <div className="min-h-screen bg-white font-sans">
+      {/* Pixel */}
+      <script dangerouslySetInnerHTML={{ __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1419561725602042');fbq('track','PageView');` }} />
 
-const Index = () => {
-  const [searchParams] = useSearchParams();
-  const prenom = useMemo(() => searchParams.get("prenom") || "", [searchParams]);
-  const enfant = useMemo(() => searchParams.get("enfant") || "", [searchParams]);
-  const pain = useMemo(() => searchParams.get("pain") || "default", [searchParams]);
-  const hook = PAIN_HOOKS[pain] ?? PAIN_HOOKS.default;
-  const painContent = PAIN_CONTENT[pain] ?? PAIN_CONTENT.default;
-  const orderedTestimonials = useMemo(() => painContent.testimonialOrder.map(i => testimonials[i]), [painContent]);
-  const orderedFaq = useMemo(() => {
-    if (painContent.faqFirst == null) return FAQ_ITEMS;
-    const first = FAQ_ITEMS[painContent.faqFirst];
-    return [first, ...FAQ_ITEMS.filter((_, i) => i !== painContent.faqFirst)];
-  }, [painContent]);
+      {/* Countdown bar */}
+      <CountdownBlock />
 
-  return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-hero text-hero-foreground sticky top-0 z-50">
-        <div className="mx-auto max-w-5xl px-4 py-3.5 flex items-center justify-between">
-          <img src={logo} alt="Trari Pédagogie" className="h-[41px] brightness-0 invert" />
-          <p className="text-xs text-hero-foreground/70 hidden sm:block">+5 500 enfants accompagnés &nbsp;•&nbsp; +1 500 professionnels formés</p>
-        </div>
-      </nav>
+      {/* Header */}
+      <header className="bg-white border-b border-gray-100 py-3 px-4 flex justify-center">
+        <img src={logo} alt="Trari Pédagogie" className="h-10" />
+      </header>
 
       {/* Hero */}
-      <section className="bg-hero text-hero-foreground py-20 md:py-32 relative">
-        <div className="mx-auto max-w-2xl px-4 text-center">
-          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full border-2 border-success/40 bg-success/10">
-            <CheckCircle className="h-10 w-10 text-success" />
+      <section className="bg-gradient-to-b from-amber-50 to-white py-16 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+            <Clock className="w-4 h-4" />
+            Offre limitée 48h — {PRIX_OFFRE}€ au lieu de {PRIX_NORMAL}€
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] leading-tight mb-6">
-            {prenom ? `Bonne nouvelle, ${prenom} :` : "Bonne nouvelle :"}{" "}
-            <span className="italic text-accent">{hook.h1(enfant)}</span>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+            Les 15 Clés pour transformer<br />
+            <span className="text-[#E8892B]">l'écriture de votre enfant</span><br />
+            en 10 minutes par jour
           </h1>
-          <p className="text-lg md:text-xl text-hero-foreground/75 leading-relaxed mb-10 max-w-xl mx-auto">
-            {hook.sub(enfant)}
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            La méthode complète de Samirra Trari — spécialiste en rééducation graphomotrice — pour corriger les difficultés d'écriture à la racine. Résultats visibles en 2 à 4 semaines.
           </p>
-          <ScarcityBadge />
-          <div className="mt-16 animate-bounce"><ChevronDown className="h-6 w-6 mx-auto text-hero-foreground/40" /></div>
-        </div>
-      </section>
 
-      {/* Autorité */}
-      <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-4xl px-4">
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-            <div className="shrink-0">
-              <img src={photoSamirra} alt="Samirra Trari, graphopédagogue" className="w-44 h-44 md:w-56 md:h-56 rounded-2xl object-cover shadow-xl" />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Ta formatrice</p>
-              <h2 className="text-3xl md:text-4xl leading-snug mb-6">Une méthode issue de plus de 15 ans d'accompagnement d'enfants</h2>
-              <p className="text-base leading-relaxed text-muted-foreground">Depuis plus de 15 ans, j'accompagne des enfants dans leur développement et leur confiance. En graphopédagogie, j'ai développé une méthode structurée et éprouvée pour aider les enfants à retrouver une écriture fluide, lisible et sans douleur.</p>
-              <p className="mt-4 text-sm font-medium text-foreground">— Samirra Trari, graphopédagogue</p>
-            </div>
+          {/* Stars */}
+          <div className="flex items-center justify-center gap-1 mb-8">
+            {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />)}
+            <span className="ml-2 text-gray-600 font-medium">+500 familles et professionnels</span>
           </div>
-          <div className="grid grid-cols-3 gap-6 mt-12 max-w-xl mx-auto md:mx-0 md:ml-auto md:max-w-lg">
-            {[{ value: "15+", label: "ans d'expérience" }, { value: "5 500+", label: "enfants accompagnés" }, { value: "1 500+", label: "professionnels formés" }].map((s, i) => (
-              <div key={i} className="text-center">
-                <p className="text-3xl md:text-4xl font-bold text-primary">{s.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Constat */}
-      <section className="py-16 md:py-24 bg-card">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Le constat</p>
-          <h2 className="text-3xl md:text-4xl mb-4">Pourquoi {enfant || "ton enfant"} rencontre des difficultés d'écriture ?</h2>
-          <p className="text-muted-foreground mb-4 max-w-xl mx-auto">Très souvent, les difficultés d'écriture ne viennent pas d'un manque d'effort ou de motivation.</p>
-          <p className="text-foreground font-medium mb-4">Elles viennent d'un geste graphique qui ne s'est pas installé correctement.</p>
-          {painContent.constatInsight && (
-            <p className="text-sm text-accent font-medium mb-10 max-w-xl mx-auto bg-accent/5 border border-accent/20 rounded-xl px-5 py-3">{painContent.constatInsight}</p>
-          )}
-          {!painContent.constatInsight && <div className="mb-10" />}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            {[
-              { icon: "🪑", label: "Posture", pains: ["pression", "douleur"] },
-              { icon: "🤲", label: "Coordination bras-poignet-main", pains: ["lenteur"] },
-              { icon: "✏️", label: "Tenue du crayon", pains: ["tenue", "gaucher"] },
-              { icon: "💪", label: "Pression du stylo", pains: ["pression", "douleur"] },
-              { icon: "✍️", label: "Organisation du geste graphique", pains: ["illegible", "pleurs", "lenteur"] },
-            ].map((item, i) => (
-              <div key={i} className={`flex flex-col items-center gap-2 rounded-xl bg-background p-4 border transition-all ${item.pains.includes(pain) ? "border-accent bg-accent/5 shadow-sm" : "border-border"}`}>
-                <span className="text-2xl">{item.icon}</span>
-                <span className={`text-xs font-medium text-center ${item.pains.includes(pain) ? "text-accent" : "text-foreground"}`}>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          {/* CTA Hero */}
+          <button
+            onClick={handleCTAClick}
+            className="inline-flex items-center gap-3 bg-[#E8892B] hover:bg-[#d47a1e] text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+          >
+            J'accède aux 15 Clés maintenant
+            <ArrowRight className="w-5 h-5" />
+          </button>
+          <p className="mt-3 text-sm text-gray-500">
+            <span className="line-through">{PRIX_NORMAL}€</span>
+            {" "}<strong className="text-[#E8892B] text-base">{PRIX_OFFRE}€</strong>
+            {" "}· Accès immédiat · Garantie 30 jours
+          </p>
         </div>
       </section>
 
       {/* Pour qui */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Pour qui ?</p>
-          <h2 className="text-3xl md:text-4xl mb-10">Cette formation est faite pour toi si…</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+      <section className="py-14 px-4 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">Cette formation est pour vous si…</h2>
+          <div className="grid md:grid-cols-2 gap-4">
             {[
-              { icon: <Heart className="h-6 w-6" />, text: "Ton enfant a du mal à écrire lisiblement ou se plaint de douleurs en écrivant", pains: ["douleur", "pression"] },
-              { icon: <BookOpen className="h-6 w-6" />, text: "Tu veux l'aider à la maison avec des exercices simples et efficaces", pains: [] },
-              { icon: <Brain className="h-6 w-6" />, text: "Tu cherches à comprendre d'où viennent ses difficultés d'écriture", pains: ["illegible", "lenteur"] },
-              { icon: <Users className="h-6 w-6" />, text: "Tu veux être guidée pas à pas par une méthode éprouvée sur des milliers d'enfants", pains: [] },
+              { icon: <Users className="w-5 h-5" />, text: "Votre enfant a du mal à tenir son stylo ou écrit avec douleur" },
+              { icon: <Brain className="w-5 h-5" />, text: "Son écriture est illisible, irrégulière ou trop lente" },
+              { icon: <BookOpen className="w-5 h-5" />, text: "Les devoirs se terminent en larmes et en découragement" },
+              { icon: <Award className="w-5 h-5" />, text: "Vous êtes enseignant(e), orthophoniste ou éducateur" },
+              { icon: <Gift className="w-5 h-5" />, text: "Vous cherchez une méthode concrète, pas de la théorie" },
+              { icon: <MessageCircle className="w-5 h-5" />, text: "Vous avez déjà essayé sans résultat et voulez comprendre pourquoi" },
             ].map((item, i) => (
-              <div key={i} className={`flex items-start gap-4 rounded-xl border p-5 text-left ${item.pains.includes(pain) ? "border-accent bg-accent/5" : "border-border bg-card"}`}>
-                <div className={`shrink-0 rounded-full p-2.5 ${item.pains.includes(pain) ? "bg-accent text-white" : "bg-accent/10 text-accent"}`}>{item.icon}</div>
-                <p className="text-sm text-foreground leading-relaxed">{item.text}</p>
+              <div key={i} className="flex items-start gap-3 bg-amber-50 rounded-xl p-4">
+                <span className="text-[#E8892B] mt-0.5 shrink-0">{item.icon}</span>
+                <span className="text-gray-700">{item.text}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* VSL */}
-      <section className="py-16 md:py-24 bg-card">
-        <div className="mx-auto max-w-3xl px-4">
-          <h2 className="text-3xl md:text-4xl text-center mb-3">Découvre la méthode en vidéo</h2>
-          <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Samirra t'explique comment fonctionne la méthode et pourquoi elle donne des résultats concrets.</p>
-          <LockedVideoPlayer videoId="5xSzPJqBaJg" title="Présentation de la méthode" />
-        </div>
-      </section>
-
-      <section className="py-10"><div className="mx-auto max-w-3xl px-4 text-center"><CtaButton enfantName={enfant} /></div></section>
-
-      {/* Avant/Après */}
-      <section className="py-16 md:py-24 bg-card">
-        <div className="mx-auto max-w-4xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Résultats</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-3">Des résultats visibles sur l'écriture</h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-md mx-auto">Voici l'évolution de l'écriture de quelques enfants accompagnés par la méthode.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[{ src: avantApresEric, alt: "Avant/Après — Éric — 15 ans", label: "Éric — 15 ans, 1ère" }, { src: avantApresLyla, alt: "Avant/Après — Lyla — CE2", label: "Lyla — CE2" }, { src: avantApresMarceau, alt: "Avant/Après — Marceau — CM1", label: "Marceau — CM1" }, { src: avantApresLouka, alt: "Avant/Après — Louka — CE2", label: "Louka — CE2" }].map((img, i) => (
-              <div key={i} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 bg-background">
-                <img src={img.src} alt={img.alt} className="w-full h-auto" loading="lazy" />
-                <p className="text-center text-sm font-medium text-muted-foreground py-3">{img.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Preuve vidéo */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Preuve en vidéo</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-3">Regarde les résultats par toi-même</h2>
-          <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">Une vidéo qui montre concrètement l'impact de la méthode sur l'écriture des enfants.</p>
-          <LockedVideoPlayer videoId="pPn2V-jQUNg" title="Preuve vidéo" />
-        </div>
-      </section>
-
-      {/* Témoignages */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-5xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Témoignages</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-3">Ce qu'en disent les parents</h2>
-          <div className="flex items-center justify-center gap-2 mb-10"><StarRating /><span className="text-sm text-muted-foreground ml-1">5/5 — Avis vérifiés</span></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {orderedTestimonials.map((t, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-6 flex flex-col hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">{t.name[0]}</div>
-                  <div><p className="text-sm font-semibold text-foreground">{t.name}</p><StarRating /></div>
+      {/* Les 15 Clés */}
+      <section className="py-14 px-4 bg-gray-50">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-3">Les 15 Clés — Ce que vous allez apprendre</h2>
+          <p className="text-center text-gray-500 mb-10">15 modules vidéo + fiches PDF + exercices progressifs</p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {CLES.map((cle) => (
+              <div key={cle.num} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex gap-3 items-start">
+                <div className="w-8 h-8 rounded-full bg-[#E8892B] text-white font-bold text-sm flex items-center justify-center shrink-0">
+                  {cle.num}
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground flex-1">"{t.text}"</p>
-                <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground/60"><CheckCircle className="h-3.5 w-3.5" />Avis vérifié</div>
+                <div>
+                  <div className="font-semibold text-gray-900 text-sm">{cle.titre}</div>
+                  <div className="text-gray-500 text-xs mt-1">{cle.desc}</div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Contenu */}
-      <section className="py-16 md:py-24 bg-card">
-        <div className="mx-auto max-w-3xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Le programme</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-12">Une formation claire et directement applicable</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {[{ icon: <Video className="h-5 w-5" />, value: "63 vidéos", label: "Cours structurés étape par étape" }, { icon: <Play className="h-5 w-5" />, value: "5 à 10 min", label: "Format court et efficace" }, { icon: <Award className="h-5 w-5" />, value: "5h de formation", label: "Contenu dense et applicable" }, { icon: <FileText className="h-5 w-5" />, value: "Livret", label: "Support écrit complet" }, { icon: <Award className="h-5 w-5" />, value: "Certificat", label: "Attestation de fin de formation" }, { icon: <MessageCircle className="h-5 w-5" />, value: "Groupe WhatsApp", label: "Communauté d'entraide" }].map((item, i) => (
-              <div key={i} className="rounded-xl border border-border bg-background p-5 text-center">
-                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-accent/10 text-accent">{item.icon}</div>
-                <p className="font-semibold text-foreground text-sm">{item.value}</p>
-                <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
+      {/* Ce que vous recevez */}
+      <section className="py-14 px-4 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">Ce que vous recevez</h2>
+          <div className="space-y-4">
+            {[
+              { icon: <Video className="w-5 h-5" />, titre: "15 modules vidéo", desc: "Une vidéo par clé — courte, claire, applicable immédiatement." },
+              { icon: <FileText className="w-5 h-5" />, titre: "Fiches PDF téléchargeables", desc: "Résumés imprimables pour chaque clé, à garder à portée de main." },
+              { icon: <BookOpen className="w-5 h-5" />, titre: "Exercices progressifs", desc: "Organisés par niveau et par profil. On commence là où l'enfant en est." },
+              { icon: <Award className="w-5 h-5" />, titre: "Module gauchers inclus", desc: "Un module entier dédié aux spécificités de l'écriture chez les gauchers." },
+              { icon: <Clock className="w-5 h-5" />, titre: "Accès à vie", desc: "Vous accédez à la formation pour toujours. Mises à jour incluses." },
+              { icon: <ShieldCheck className="w-5 h-5" />, titre: "Garantie 30 jours", desc: "Pas de résultat visible après 30 jours ? Remboursement intégral, sans question." },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4 bg-amber-50 rounded-xl p-4">
+                <span className="text-[#E8892B] mt-0.5 shrink-0">{item.icon}</span>
+                <div>
+                  <div className="font-semibold text-gray-900">{item.titre}</div>
+                  <div className="text-gray-600 text-sm">{item.desc}</div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Les clés */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Programme détaillé</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-3">Les clés de la méthode</h2>
-          <p className="text-center text-muted-foreground mb-10">Clique sur une clé pour découvrir son contenu</p>
-          <div className="flex flex-col gap-3">{keys.map((k, i) => <KeyItem key={i} num={i + 1} title={k.title} desc={k.desc} highlighted={painContent.clesHighlight.includes(i + 1)} />)}</div>
-        </div>
-      </section>
-
-      <section className="py-10 bg-card"><div className="mx-auto max-w-3xl px-4 text-center"><CtaButton enfantName={enfant} /></div></section>
-
-      {/* Bonus */}
-      <section className="py-16 md:py-24 bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">En plus</p>
-          <h2 className="text-3xl md:text-4xl mb-10">Bonus inclus dans la formation</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-            {[{ icon: <Gift className="h-5 w-5" />, title: "Module réflexe d'agrippement" }, { icon: <Gift className="h-5 w-5" />, title: "Module spécifique pour les enfants gauchers" }].map((b, i) => (
-              <div key={i} className={`flex items-center gap-3 rounded-xl border p-5 text-left ${pain === "gaucher" && i === 1 ? "border-accent bg-accent/20" : "bg-hero-foreground/5 border-hero-foreground/10"}`}>
-                <div className="shrink-0 text-accent">{b.icon}</div>
-                <span className="text-sm font-medium text-hero-foreground">{b.title}</span>
+      {/* Testimonials */}
+      <section className="py-14 px-4 bg-gray-50">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">Ce qu'ils disent</h2>
+          <div className="grid md:grid-cols-2 gap-5">
+            {TEMOIGNAGES.map((t, i) => (
+              <div key={i} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+                <div className="flex gap-0.5 mb-3">
+                  {[...Array(t.note)].map((_, j) => <Star key={j} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
+                </div>
+                <p className="text-gray-700 italic mb-3">"{t.texte}"</p>
+                <p className="font-semibold text-sm text-gray-900">{t.nom}</p>
               </div>
             ))}
           </div>
-          <div className="mt-4 rounded-xl bg-hero-foreground/5 border border-hero-foreground/10 p-6 max-w-xl mx-auto text-left">
-            <h3 className="text-lg font-semibold mb-2">Groupe WhatsApp privé</h3>
-            <p className="text-sm text-hero-foreground/70 leading-relaxed">Rejoins une communauté bienveillante de parents formés à la méthode. Échange tes questions, partage tes progrès et bénéficie du soutien du groupe au quotidien.</p>
+        </div>
+      </section>
+
+      {/* CTA mid-page */}
+      <section className="py-14 px-4 bg-[#E8892B]">
+        <div className="max-w-2xl mx-auto text-center text-white">
+          <h2 className="text-2xl font-bold mb-2">Offre spéciale — 48h seulement</h2>
+          <p className="mb-6 opacity-90">Après ça, le tarif normal de {PRIX_NORMAL}€ reprend. Aucune exception.</p>
+          <button
+            onClick={handleCTAClick}
+            className="inline-flex items-center gap-3 bg-white text-[#E8892B] font-bold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all"
+          >
+            Je prends l'offre à {PRIX_OFFRE}€
+            <ArrowRight className="w-5 h-5" />
+          </button>
+          <div className="mt-4 flex items-center justify-center gap-4 text-sm opacity-80">
+            <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4" /> Paiement sécurisé</span>
+            <span className="flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Accès immédiat</span>
+            <span className="flex items-center gap-1"><Gift className="w-4 h-4" /> Garantie 30 jours</span>
           </div>
         </div>
       </section>
-
-      {/* Ce que non */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Clarification</p>
-          <h2 className="text-3xl md:text-4xl mb-10">Ce que cette formation n'est pas</h2>
-          <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
-            {painContent.ceQueNon.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 text-left">
-                <X className="h-5 w-5 text-destructive shrink-0" /><span className="text-sm text-foreground">{item}</span>
-              </div>
-            ))}
-          </div>
-          <p className="text-base font-medium text-foreground">C'est une formation <strong>pratique, structurée et directement applicable à la maison</strong>.</p>
-        </div>
-      </section>
-
-      {/* Garantie */}
-      <section className="py-16 md:py-20 bg-card">
-        <div className="mx-auto max-w-xl px-4 text-center">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-success/10"><ShieldCheck className="h-8 w-8 text-success" /></div>
-          <h2 className="text-3xl md:text-4xl mb-4">Garantie 14 jours</h2>
-          <p className="text-muted-foreground leading-relaxed mb-3">Tu pourras découvrir les Clés 1 et 2 dès ton inscription.</p>
-          <p className="text-muted-foreground leading-relaxed">Si la formation ne te convient pas, je m'engage à te rembourser l'intégralité de ton paiement dans un délai de 14 jours suivant ton inscription.</p>
-        </div>
-      </section>
-
 
       {/* FAQ */}
-      <section className="py-16 md:py-24 bg-card">
-        <div className="mx-auto max-w-3xl px-4">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent text-center mb-3">Questions fréquentes</p>
-          <h2 className="text-3xl md:text-4xl text-center mb-10">Tu as des questions ?</h2>
-          <div className="flex flex-col gap-3">
-            {orderedFaq.map((item, i) => <FaqItem key={i} q={item.q} a={item.a} />)}
+      <section className="py-14 px-4 bg-white">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">Questions fréquentes</h2>
+          <div className="space-y-3">
+            {FAQ.map((item, i) => <FAQItem key={i} q={item.q} a={item.a} />)}
           </div>
         </div>
       </section>
 
-      {/* Prix */}
-      <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-lg px-4 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3">Prête à te lancer ?</p>
-          <h2 className="text-3xl md:text-4xl mb-10">Accède à la formation complète</h2>
-          <div className="rounded-2xl border-2 border-accent/30 bg-background p-8 md:p-12 shadow-xl">
-            <div className="mb-4 flex justify-center"><ScarcityBadge /></div>
-            <p className="text-muted-foreground line-through text-lg mb-1">592 €</p>
-            <p className="text-5xl md:text-6xl font-bold text-accent mb-1">296 €</p>
-            <p className="text-sm text-muted-foreground mb-2">Paiement en une fois ou en deux fois</p>
-            <p className="text-xs text-muted-foreground mb-8">63 vidéos • 5h de formation • Livret inclus • Certificat • Garantie 14 jours</p>
-            <CtaButton className="w-full justify-center" />
-            <div className="mt-8 space-y-2">
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground"><Lock className="h-4 w-4" />Paiement sécurisé</div>
-              <p className="text-sm text-success font-medium">✓ Accès immédiat après inscription</p>
-            </div>
-            <p className="text-sm text-muted-foreground mt-6">Tu as encore une question ?{" "}
-              <a href="https://wa.me/33611901805" target="_blank" rel="noopener noreferrer" className="text-accent underline hover:brightness-110 transition">Écris-moi sur WhatsApp 😄</a>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA final */}
-      <section className="py-20 bg-hero text-hero-foreground">
-        <div className="mx-auto max-w-2xl px-4 text-center">
-          <h2 className="text-3xl md:text-4xl mb-4">
-            {prenom ? `${prenom}, prête à transformer l'écriture ${enfant ? `de ${enfant}` : "de ton enfant"} ?` : "Prête à transformer l'écriture de ton enfant ?"}
+      {/* Final CTA */}
+      <section className="py-16 px-4 bg-gradient-to-b from-amber-50 to-white">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="text-4xl mb-4">🎯</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Prêt à tout changer en 10 minutes par jour ?
           </h2>
-          <p className="text-hero-foreground/65 mb-10 max-w-md mx-auto">Rejoins les milliers de parents qui ont déjà fait confiance à la méthode.</p>
-          <CtaButton enfantName={enfant} />
+          <p className="text-gray-600 mb-8">
+            Rejoignez les +500 familles et professionnels qui ont transformé l'écriture avec les 15 Clés.
+          </p>
+          <button
+            onClick={handleCTAClick}
+            className="inline-flex items-center gap-3 bg-[#E8892B] hover:bg-[#d47a1e] text-white font-bold text-xl px-10 py-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1"
+          >
+            Accéder aux 15 Clés maintenant
+            <ArrowRight className="w-6 h-6" />
+          </button>
+          <p className="mt-3 text-gray-500 text-sm">
+            <span className="line-through">{PRIX_NORMAL}€</span>
+            {" "}<strong className="text-[#E8892B] text-base">{PRIX_OFFRE}€</strong>
+            {" "}· Accès immédiat · Garantie 30 jours
+          </p>
         </div>
       </section>
 
-      <footer className="py-8 border-t border-border">
-        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-muted-foreground space-y-2">
-          <p>© {new Date().getFullYear()} Samirra Trari — Graphopédagogie</p>
-          <div className="flex justify-center gap-4">
-            <a href="/politique-de-confidentialite" className="hover:text-foreground underline">Politique de confidentialité</a>
-            <a href="/cgv" className="hover:text-foreground underline">CGV</a>
-          </div>
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-8 px-4 text-center text-gray-400 text-sm">
+        <img src={logo} alt="Trari Pédagogie" className="h-8 mx-auto mb-4 opacity-40" />
+        <div className="flex flex-wrap justify-center gap-4">
+          <a href="/mentions-legales" className="hover:text-gray-600">Mentions légales</a>
+          <a href="/cgv" className="hover:text-gray-600">CGV</a>
+          <a href="/politique-de-confidentialite" className="hover:text-gray-600">Confidentialité</a>
         </div>
+        <p className="mt-4">© {new Date().getFullYear()} Trari Pédagogie — Samirra Trari</p>
       </footer>
-      <ChatWidget persona="parent" />
+
+      {/* Nina chatbot */}
+      <ChatWidget persona="offre" />
     </div>
   );
-};
-
-export default Index;
+}
