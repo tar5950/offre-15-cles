@@ -224,9 +224,9 @@ function ExitIntentPopup({ onClose, persona }: { onClose: () => void; persona: s
         {!sent ? (
           <>
             <div className="bg-[#1B2B4B] text-white px-6 py-5">
-              <p className="text-xs uppercase tracking-widest text-[#E8892B] font-semibold mb-1">30 secondes pour nous aider</p>
-              <h3 className="text-lg font-bold leading-snug">Avant de partir — qu'est-ce qui vous retient ?</h3>
-              <p className="text-sm text-white/60 mt-1">Votre réponse nous aide à mieux vous accompagner.</p>
+              <p className="text-xs uppercase tracking-widest text-[#E8892B] font-semibold mb-1">Une question rapide</p>
+              <h3 className="text-lg font-bold leading-snug">Qu'est-ce qui vous a freiné aujourd'hui ?</h3>
+              <p className="text-sm text-white/60 mt-1">Sélectionnez votre réponse ci-dessous — 10 secondes.</p>
             </div>
             <div className="px-6 py-4 flex flex-col gap-2.5">
               {EXIT_REASONS.map((r) => (
@@ -591,3 +591,4 @@ export default function Index() {
     </div>
   );
 }
+
