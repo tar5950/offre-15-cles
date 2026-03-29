@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 
 const CTA_URL = "https://samirratrari.podia.com/15-cles-offre-speciale-60/buy";
 const PRIX_BARRE = 592;
-const PRIX_PRECEDENT = 286;
+const PRIX_PRECEDENT = 296;
 const PRIX_OFFRE = 236;
 const PRIX_MENSUALITE = 118;
 
