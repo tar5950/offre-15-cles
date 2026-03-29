@@ -44,21 +44,21 @@ function useCountdown() {
 }
 
 const CLES = [
-  { num: 1, titre: "Les constats", desc: "Identifier les défis courants de l'écriture pour savoir exactement où agir." },
-  { num: 2, titre: "Quand et par quoi commencer", desc: "Les premières étapes à suivre — la progression qui change tout." },
-  { num: 3, titre: "La latéralisation", desc: "Identifier et soutenir la dominance manuelle de l'enfant." },
-  { num: 4, titre: "Les réflexes archaïques", desc: "Comprendre leur lien direct avec le blocage du geste graphique." },
-  { num: 5, titre: "La posture", desc: "Les meilleures pratiques pour écrire sans fatigue ni douleur." },
-  { num: 6, titre: "Prérequis pour une écriture indolore", desc: "Les bases nécessaires avant d'aborder le geste scripteur." },
-  { num: 7, titre: "La tenue de crayon", desc: "Une prise en main correcte, confortable et durable." },
-  { num: 8, titre: "L'inclinaison du support", desc: "Comment l'angle du cahier facilite ou bloque l'écriture." },
-  { num: 9, titre: "Le déplacement de l'avant-bras", desc: "Le mouvement clé pour une écriture fluide et non fatigante." },
-  { num: 10, titre: "Le tracé des lettres", desc: "Perfectionner le geste pour plus de lisibilité et de régularité." },
-  { num: 11, titre: "Les formes de base", desc: "Le processus de formation des lettres — ce qui précède tout le reste." },
-  { num: 12, titre: "Quelques règles d'écriture", desc: "Des règles simples pour une écriture lisible et cohérente." },
-  { num: 13, titre: "Partir du geste", desc: "Utiliser le mouvement naturel du corps comme point de départ." },
-  { num: 14, titre: "Les supports", desc: "Choisir les bons supports selon l'âge et le profil de l'enfant." },
-  { num: 15, titre: "Les outils scripteurs", desc: "Sélectionner les outils les plus adaptés — un choix qui fait toute la différence." },
+  { num: 1, titre: "Les constats", desc: "Identifier les défis courants de l'écriture pour savoir exactement où agir.", duration: "8 min 58 s" },
+  { num: 2, titre: "Quand et par quoi commencer", desc: "Les premières étapes à suivre — la progression qui change tout.", duration: "9 min 19 s" },
+  { num: 3, titre: "La latéralisation", desc: "Identifier et soutenir la dominance manuelle de l'enfant.", duration: "6 min 26 s" },
+  { num: 4, titre: "Les réflexes archaïques", desc: "Comprendre leur lien direct avec le blocage du geste graphique.", duration: "4 min 45 s" },
+  { num: 5, titre: "La posture", desc: "Les meilleures pratiques pour écrire sans fatigue ni douleur.", duration: "4 min" },
+  { num: 6, titre: "Prérequis pour une écriture indolore", desc: "Les bases nécessaires avant d'aborder le geste scripteur.", duration: "19 min 11 s" },
+  { num: 7, titre: "La tenue de crayon", desc: "Une prise en main correcte, confortable et durable.", duration: "10 min 46 s" },
+  { num: 8, titre: "L'inclinaison du support", desc: "Comment l'angle du cahier facilite ou bloque l'écriture.", duration: "3 min 16 s" },
+  { num: 9, titre: "Le déplacement de l'avant-bras", desc: "Le mouvement clé pour une écriture fluide et non fatigante.", duration: "4 min 47 s" },
+  { num: 10, titre: "Le tracé des lettres", desc: "Perfectionner le geste pour plus de lisibilité et de régularité.", duration: "3 min 47 s" },
+  { num: 11, titre: "Les formes de base", desc: "Le processus de formation des lettres — ce qui précède tout le reste.", duration: "4 min 25 s" },
+  { num: 12, titre: "Quelques règles d'écriture", desc: "Des règles simples pour une écriture lisible et cohérente.", duration: "10 min 43 s" },
+  { num: 13, titre: "Partir du geste", desc: "Utiliser le mouvement naturel du corps comme point de départ.", duration: "6 min 12 s" },
+  { num: 14, titre: "Les supports", desc: "Choisir les bons supports selon l'âge et le profil de l'enfant.", duration: "13 min 58 s" },
+  { num: 15, titre: "Les outils scripteurs", desc: "Sélectionner les outils les plus adaptés — un choix qui fait toute la différence.", duration: "19 min 14 s" },
 ];
 
 const TEMOIGNAGES = [
@@ -460,10 +460,11 @@ export default function Index() {
             {CLES.map((c) => (
               <div key={c.num} className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex gap-3 items-start">
                 <div className="w-7 h-7 rounded-full bg-[#E8892B] text-white font-bold text-xs flex items-center justify-center shrink-0">{c.num}</div>
-                <div>
+                <div className="flex-1">
                   <div className="font-semibold text-gray-900 text-sm">{c.titre}</div>
                   <div className="text-gray-500 text-xs mt-0.5">{c.desc}</div>
                 </div>
+                <span className="shrink-0 text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full self-start">{c.duration}</span>
               </div>
             ))}
           </div>
