@@ -22,11 +22,29 @@ const handleCTAClick = () => {
 };
 
 function getDeadline(): Date {
-  if (typeof window === "undefined") return new Date(Date.now() + 48 * 3600 * 1000);
-  const stored = sessionStorage.getItem("offre_deadline_v2");
-  if (stored) return new Date(parseInt(stored));
-  const d = Date.now() + 48 * 3600 * 1000;
-  sessionStorage.setItem("offre_deadline_v2", String(d));
+  if (typeof window === "undefined") return new Date(Date.now() + 72 * 3600 * 1000);
+  
+  // Check if sent_at param is provided (from email link)
+  const params = new URLSearchParams(window.location.search);
+  const sentAt = params.get("sent_at");
+  
+  if (sentAt) {
+    // Calculate deadline: 72 hours from when email was sent
+    const sentTime = parseInt(sentAt);
+    const deadline = new Date(sentTime + 72 * 3600 * 1000);
+    localStorage.setItem("offre_deadline", String(deadline.getTime()));
+    return deadline;
+  }
+  
+  // Otherwise, check localStorage for existing deadline
+  const stored = localStorage.getItem("offre_deadline");
+  if (stored) {
+    return new Date(parseInt(stored));
+  }
+  
+  // Fallback: 72 hours from now
+  const d = Date.now() + 72 * 3600 * 1000;
+  localStorage.setItem("offre_deadline", String(d));
   return new Date(d);
 }
 
