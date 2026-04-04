@@ -337,13 +337,13 @@ function useExitIntent(): [boolean, () => void] {
       }
     };
 
-    // Mobile: 45s inactivity timer
+    // Mobile: 3 minutes inactivity timer (180000ms) — much less aggressive
     const timer = setTimeout(() => {
       if (fired.current) return;
       fired.current = true;
       sessionStorage.setItem("exit_intent_shown", "1");
       setShow(true);
-    }, 45000);
+    }, 180000);
 
     document.addEventListener("mouseout", onMouseOut);
     return () => {
@@ -359,8 +359,8 @@ export default function Index() {
   const [searchParams] = useSearchParams();
   const prenom = searchParams.get("prenom") || "";
   const enfant = searchParams.get("enfant") || "";
-  const persona = searchParams.get("persona") || "parent"; // "parent" | "pro"
-  const isPro = persona === "pro";
+  const type = searchParams.get("type") || "parent"; // "parent" | "pro"
+  const isPro = type === "pro";
   const { h, m, s, expired } = useCountdown();
   const [showExitIntent, closeExitIntent] = useExitIntent();
 
@@ -613,7 +613,7 @@ export default function Index() {
       <ChatWidget persona={isPro ? "pro" : "parent"} />
 
       {/* Exit-intent feedback popup */}
-      {showExitIntent && <ExitIntentPopup onClose={closeExitIntent} persona={persona} />}
+      {showExitIntent && <ExitIntentPopup onClose={closeExitIntent} persona={type} />}
     </div>
   );
 }
