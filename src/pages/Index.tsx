@@ -43,6 +43,38 @@ function useCountdown() {
   return { h, m, s, expired: remaining === 0 };
 }
 
+// ─── CONTENU ADAPTATIF ─────────────────────────────────────────────────────────
+const CONTENT = {
+  parent: {
+    heroTitle: (enfant: string) => `${enfant} mérite mieux que des exercices qui ne changent rien.`,
+    heroTitleHighlight: "Voici la dernière chance.",
+    heroDescription: "+5 500 enfants accompagnés. Une méthode de terrain en 15 clés, 10 min par jour, résultats visibles en quelques semaines.",
+    lostWeekTitle: "Chaque semaine qui passe sans agir…",
+    lostWeekItems: [
+      (enfant: string) => `…c'est une semaine de plus où ${enfant} souffre face aux devoirs.`,
+      (enfant: string) => `…c'est une semaine de plus où ${enfant} perd confiance.`,
+      "…c'est un geste qui s'ancre encore plus profondément dans le mauvais sens.",
+      "…c'est une opportunité à 236€ que vous n'aurez plus.",
+    ],
+    ctaText: "Je saisis cette dernière chance",
+    finalTitle: (enfant: string) => `${enfant} peut progresser. Vous avez les clés.`,
+  },
+  pro: {
+    heroTitle: (prenom: string) => `${prenom ? `${prenom}, vous` : "Vous"} savez qu'il vous manque quelque chose.`,
+    heroTitleHighlight: "Voici exactement ce que c'est.",
+    heroDescription: "+1 500 professionnels (orthophonistes, enseignants, ergothérapeutes) ont transformé leur pratique avec les 15 Clés. 5h de formation terrain, applicables dès votre prochaine séance.",
+    lostWeekTitle: "Chaque semaine sans les bons outils…",
+    lostWeekItems: [
+      "…c'est une séance de plus où vous cherchez quoi faire avec cet enfant.",
+      "…c'est un enfant qui compense, fatigue et perd confiance.",
+      "…c'est un blocage que vous n'arrivez pas à lever faute d'approche structurée.",
+      "…c'est du temps perdu sur des solutions qui ne s'attaquent pas aux vraies causes.",
+    ],
+    ctaText: "Je saisis cette dernière chance",
+    finalTitle: "Vous savez exactement quoi faire avec chacun de vos élèves.",
+  },
+};
+
 const CLES = [
   { num: 1, titre: "Les constats", desc: "Identifier les défis courants de l'écriture pour savoir exactement où agir.", duration: "8 min 58 s" },
   { num: 2, titre: "Quand et par quoi commencer", desc: "Les premières étapes à suivre — la progression qui change tout.", duration: "9 min 19 s" },
@@ -377,21 +409,21 @@ export default function Index() {
           {isPro ? (
             <>
               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">
-                {prenom ? `${prenom}, vous` : "Vous"} savez qu'il vous manque quelque chose.<br />
-                <span className="text-[#E8892B]">Voici exactement ce que c'est.</span>
+                {CONTENT.pro.heroTitle(prenom)}<br />
+                <span className="text-[#E8892B]">{CONTENT.pro.heroTitleHighlight}</span>
               </h1>
               <p className="text-lg text-gray-600 mb-3 max-w-2xl mx-auto">
-                +1 500 professionnels (orthophonistes, enseignants, ergothérapeutes) ont transformé leur pratique avec les 15 Clés. 5h de formation terrain, applicables dès votre prochaine séance.
+                {CONTENT.pro.heroDescription}
               </p>
             </>
           ) : (
             <>
               <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-4">
-                {enfant !== "" ? `${enfant} mérite` : "Votre enfant mérite"} mieux que des exercices qui ne changent rien.<br />
-                <span className="text-[#E8892B]">Voici la dernière chance.</span>
+                {CONTENT.parent.heroTitle(enfantDisplay)}<br />
+                <span className="text-[#E8892B]">{CONTENT.parent.heroTitleHighlight}</span>
               </h1>
               <p className="text-lg text-gray-600 mb-3 max-w-2xl mx-auto">
-                +5 500 enfants accompagnés. Une méthode de terrain en 15 clés, 10 min par jour, résultats visibles en quelques semaines.
+                {CONTENT.parent.heroDescription}
               </p>
             </>
           )}
@@ -428,25 +460,18 @@ export default function Index() {
       <section className="py-12 px-4 bg-white">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-8">
-            {isPro ? "Chaque semaine sans les bons outils…" : "Chaque semaine qui passe sans agir…"}
+            {isPro ? CONTENT.pro.lostWeekTitle : CONTENT.parent.lostWeekTitle}
           </h2>
           <div className="space-y-3">
-            {isPro ? [
-              "…c'est une séance de plus où vous cherchez quoi faire avec cet enfant.",
-              "…c'est un enfant qui compense, fatigue et perd confiance.",
-              "…c'est un blocage que vous n'arrivez pas à lever faute d'approche structurée.",
-              "…c'est du temps perdu sur des solutions qui ne s'attaquent pas aux vraies causes.",
-            ] : [
-              `…c'est une semaine de plus où ${enfantDisplay} souffre face aux devoirs.`,
-              `…c'est une semaine de plus où ${enfantDisplay} perd confiance.`,
-              "…c'est un geste qui s'ancre encore plus profondément dans le mauvais sens.",
-              "…c'est une opportunité à 236€ que vous n'aurez plus.",
-            ].map((t, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-xl">
-                <span className="text-red-500 mt-0.5 shrink-0">✗</span>
-                <span className="text-gray-700 text-sm">{t}</span>
-              </div>
-            ))}
+            {(isPro ? CONTENT.pro.lostWeekItems : CONTENT.parent.lostWeekItems).map((t, i) => {
+              const text = typeof t === "function" ? t(enfantDisplay) : t;
+              return (
+                <div key={i} className="flex items-start gap-3 p-3 bg-red-50 border border-red-100 rounded-xl">
+                  <span className="text-red-500 mt-0.5 shrink-0">✗</span>
+                  <span className="text-gray-700 text-sm">{text}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -562,7 +587,7 @@ export default function Index() {
         <div className="max-w-2xl mx-auto text-center">
           <Target className="w-10 h-10 text-[#E8892B] mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
-            {isPro ? "Vous savez exactement quoi faire avec chacun de vos élèves." : `${enfantDisplay} peut progresser. Vous avez les clés.`}
+            {isPro ? CONTENT.pro.finalTitle : CONTENT.parent.finalTitle(enfantDisplay)}
           </h2>
           <p className="text-gray-500 text-sm mb-6">+5 500 enfants accompagnés · +1 500 professionnels formés · 5h de formation terrain</p>
           <button onClick={handleCTAClick} className="inline-flex items-center gap-3 bg-[#E8892B] hover:bg-[#d47a1e] text-white font-bold text-xl px-10 py-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 mb-3">
